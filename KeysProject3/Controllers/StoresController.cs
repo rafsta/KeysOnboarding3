@@ -6,27 +6,27 @@ using System.Web.Mvc;
 
 namespace KeysProject3.Controllers
 {
-    public class CustomerController : Controller
+    public class StoresController : Controller
     {
-        // GET: Customer
+        // GET: Stores
         public ActionResult Index()
-        { 
+        {
             return View();
         }
 
-        // GET: Customer/Details/5
+        // GET: Stores/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: Customer/Create
+        // GET: Stores/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Customer/Create
+        // POST: Stores/Create
         [HttpPost]
         public ActionResult Create(FormCollection collection)
         {
@@ -42,13 +42,13 @@ namespace KeysProject3.Controllers
             }
         }
 
-        // GET: Customer/Edit/5
+        // GET: Stores/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: Customer/Edit/5
+        // POST: Stores/Edit/5
         [HttpPost]
         public ActionResult Edit(int id, FormCollection collection)
         {
@@ -64,13 +64,13 @@ namespace KeysProject3.Controllers
             }
         }
 
-        // GET: Customer/Delete/5
+        // GET: Stores/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: Customer/Delete/5
+        // POST: Stores/Delete/5
         [HttpPost]
         public ActionResult Delete(int id, FormCollection collection)
         {

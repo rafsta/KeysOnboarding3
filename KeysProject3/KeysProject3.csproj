@@ -165,21 +165,23 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Controllers\Api\StoreController.cs" />
-    <Compile Include="Controllers\Api\ProductSoldController.cs" />
-    <Compile Include="Controllers\Api\ProductController.cs" />
-    <Compile Include="Controllers\Api\CustomerController.cs" />
-    <Compile Include="Controllers\CustomerController.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\Api\CustomersController.cs" />
+    <Compile Include="Controllers\Api\StoresController.cs" />
+    <Compile Include="Controllers\Api\ProductSoldsController.cs" />
+    <Compile Include="Controllers\Api\ProductsController.cs" />
+    <Compile Include="Controllers\CustomersController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\ProductController.cs" />
-    <Compile Include="Controllers\ProductSoldController.cs" />
-    <Compile Include="Controllers\StoreController.cs" />
+    <Compile Include="Controllers\ProductsController.cs" />
+    <Compile Include="Controllers\ProductSoldsController.cs" />
+    <Compile Include="Controllers\StoresController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Customer.cs">
       <DependentUpon>KeysModel3.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\CustomerRepo.cs" />
     <Compile Include="Models\KeysModel3.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -215,6 +217,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="KOModels\CustomerViewModel.js" />
     <Content Include="Models\KeysModel3.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>KeysModel3.Context.cs</LastGenOutput>
@@ -267,14 +270,15 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Scripts\knockout.validation.min.js.map" />
-    <Content Include="Views\Customer\Index.cshtml" />
-    <Content Include="Views\Customer\_Modal.cshtml" />
+    <Content Include="Views\Customers\Index.cshtml" />
+    <Content Include="Views\Customers\_Modal.cshtml" />
+    <Content Include="Views\Customers\ViewModel.js" />
+    <Content Include="Views\Products\Index.cshtml" />
+    <Content Include="Views\ProductSolds\Index.cshtml" />
+    <Content Include="Views\Stores\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\ProductSold\" />
-    <Folder Include="Views\Product\" />
-    <Folder Include="Views\Store\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

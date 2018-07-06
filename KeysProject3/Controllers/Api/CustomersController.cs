@@ -5,17 +5,25 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using KeysProject3.Models;
+using KeysProject3.Controllers;
+using System.Web.Http.Description;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity;
+using System.Threading.Tasks;
 
 namespace KeysProject3.Controllers.Api
 {
-    public class CustomerController : ApiController
+
+    public class CustomersController : ApiController
     {
+        //DbContext
         private readonly MVC3Entities db;
 
-        public CustomerController()
+        public CustomersController()
         {
             db = new MVC3Entities();
         }
+
 
         //GET api/customers
         public IEnumerable<Customer> GetCustomers()
@@ -58,7 +66,7 @@ namespace KeysProject3.Controllers.Api
 
             if (customerInDb == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
-
+            customerInDb.Id = customer.Id;
             customerInDb.Name = customer.Name;
             customerInDb.Address = customer.Address;
 

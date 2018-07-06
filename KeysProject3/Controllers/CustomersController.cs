@@ -3,30 +3,33 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using KeysProject3.Models;
 
 namespace KeysProject3.Controllers
 {
-    public class ProductController : Controller
+    public class CustomersController : Controller
     {
-        // GET: Product
+        private readonly MVC3Entities _db = new MVC3Entities();
+
+        // GET: Customers
         public ActionResult Index()
         {
             return View();
         }
 
-        // GET: Product/Details/5
+        // GET: Customers/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: Product/Create
+        // GET: Customers/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Product/Create
+        // POST: Customers/Create
         [HttpPost]
         public ActionResult Create(FormCollection collection)
         {
@@ -42,13 +45,13 @@ namespace KeysProject3.Controllers
             }
         }
 
-        // GET: Product/Edit/5
+        // GET: Customers/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: Product/Edit/5
+        // POST: Customers/Edit/5
         [HttpPost]
         public ActionResult Edit(int id, FormCollection collection)
         {
@@ -64,13 +67,13 @@ namespace KeysProject3.Controllers
             }
         }
 
-        // GET: Product/Delete/5
+        // GET: Customers/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: Product/Delete/5
+        // POST: Customers/Delete/5
         [HttpPost]
         public ActionResult Delete(int id, FormCollection collection)
         {

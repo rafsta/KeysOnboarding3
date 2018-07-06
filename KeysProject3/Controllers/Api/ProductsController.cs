@@ -7,7 +7,7 @@ using System.Web.Http;
 
 namespace KeysProject3.Controllers.Api
 {
-    public class ProductController : ApiController
+    public class ProductsController : ApiController
     {
         // GET api/<controller>
         public IEnumerable<string> Get()

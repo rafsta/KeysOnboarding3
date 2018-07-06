@@ -1,0 +1,31 @@
+﻿@{
+    ViewBag.Title = "Products";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Products</h2>
+
+@Html.Partial("_Modals")
+
+<table class="table table-light table-hover" id="ProductsTable">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Action(Edit)</th>
+            <th>Action(Delete)</th>
+        </tr>
+    </thead>
+    <tbody id="BodyTag" data-bind="foreach: Customers">
+        <tr>
+            <td id="IdTag" data-bind="text: id"></td>
+            <td id="NameTag" data-bind="text: name"></td>
+            <td id="AddressTag" data-bind="text: address"></td>
+            <td>
+                <a id="EditTag" data-bind="attr: { 'href': '@Url.Action("Edit", "Customer")/' + id }" class="btn btn-warning">Edit</a>
+                <a id="DeleteTag" data-bind="attr: { 'href': '@Url.Action("Delete", "Customer")/' + id }" class="btn btn-danger">Delete</a>
+
+            </td>
+        </tr>
+    </tbody>
+</table>

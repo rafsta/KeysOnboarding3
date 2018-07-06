@@ -1,0 +1,99 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Scripts.Render("~/bundles/Library")
+@Html.Partial("_Modal")
+<h2>Customers</h2>
+
+<table class="table table-light table-hover" id="CustomersTable" data-bind="visible: Customers().length > 0">
+    <thead>
+        <tr>
+            <th>Customer Name</th>
+            <th>Address</th>
+            <th>Action(Edit)</th>
+            <th>Action(Delete)</th>
+        </tr>
+    </thead>
+
+    <tbody id="BodyTag" data-bind="foreach: Customers">
+        <tr>
+            <td id="IdTag" data-bind="text: id"></td>
+            <td id="NameTag" data-bind="text: name"></td>
+            <td id="AddressTag" data-bind="text: address"></td>
+            <td>
+                <a id="EditTag" data-bind="attr: { 'href': '@Url.Action("Edit", "Customer")/' + id }" class="btn btn-warning">Edit</a>
+                <a id="DeleteTag" data-bind="attr: { 'href': '@Url.Action("Delete", "Customer")/' + id }" class="btn btn-danger">Delete</a>
+
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
+
+
+@section scripts
+{
+    <script>
+        //Load table data
+        function CustomerModel(id, name, address) {
+            var self = this;
+
+            //Two way binding for customer elements
+            self.id = ko.observable("");
+            self.name = ko.observable("");
+            self.address = ko.observable("");
+
+            var Customer = {
+                id: self.id,
+                name: self.name,
+                address: self.address
+            }
+
+            self.Customer = ko.observable();
+            self.Customers = ko.observableArray([]);
+
+            $.ajax({
+                url: 'api/customers',
+                cache: false,
+                type: 'GET',
+                contentType: 'application/json; charset=utf-8',
+                data: {},
+                success: function (data) {
+                    self.Customers(data);
+                }
+            });
+
+            //Create Customer
+             self.create = function () {
+                 
+                    $.ajax({
+                        url: '@Url.Action("CreateCustomer", "customer")',
+                        cache: false,
+                        type: 'POST',
+                        contentType: 'application/json; charset=utf-8',
+                        data: ko.toJSON(Customer),
+                        success: function (data) {
+                            CustomerModel.customers.push(new Customer(data.id, data.name, data.address));
+                            self.id(null);
+                            self.name("");
+                            self.address("");
+
+                        }
+                    })
+
+                
+                
+
+             }
+            
+
+
+        }
+             var CustomerViewModel= new CustomerModel();
+             ko.applyBindings(CustomerViewModel);
+
+
+    </script>}
