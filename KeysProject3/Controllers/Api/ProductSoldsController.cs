@@ -21,7 +21,7 @@ namespace KeysProject3.Controllers.Api
             db = new MVC3Entities();
         }
 
-        //GET api/sales
+        //GET api/productsolds
         public IEnumerable<ProductSold> Getsales()
         {
             var productSolds = db.ProductSolds.ToList();
@@ -29,7 +29,7 @@ namespace KeysProject3.Controllers.Api
             return productSolds;
         }
 
-        //GET api/sales/id
+        //GET api/productsolds/id
         public ProductSold Getsales(int id)
         {
             var productSold = db.ProductSolds.SingleOrDefault(ps => ps.Id == id);
@@ -40,7 +40,7 @@ namespace KeysProject3.Controllers.Api
             return productSold;
         }
 
-        //POST api/sales
+        //POST api/productsolds
         [HttpPost]
         public ProductSold CreateSales(ProductSold productSold)
         {
@@ -53,7 +53,7 @@ namespace KeysProject3.Controllers.Api
             return productSold;
         }
 
-        //PUT /api/sales/id
+        //PUT /api/productsolds/id
         [HttpPut]
         public void UpdateSales(int id, ProductSold productSold)
         {
@@ -73,7 +73,7 @@ namespace KeysProject3.Controllers.Api
             db.SaveChanges();
         }
 
-        //DELETE /api/sales/id
+        //DELETE /api/productsolds/id
         [HttpDelete]
         public void DeleteSales(int id)
         {

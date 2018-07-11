@@ -77,11 +77,11 @@
                     <form id="editCustomerForm">
                         <div class="form-group">
                             <label for="customerName">Name</label>
-                            <input type="text" class="form-control" id="customerName">
+                            <input data-bind="value: $root.name, valueUpdate: 'afterkeydown'" type="text" class="form-control" id="customerName">
                         </div>
                         <div class="form-group">
                             <label for="customerAddress">Address</label>
-                            <input type="text" class="form-control" id="customerAddress">
+                            <input data-bind="value: $root.address, valueUpdate: 'afterkeydown'" type="text" class="form-control" id="customerAddress">
                         </div>
                     </form>
                 </div>

@@ -6,7 +6,8 @@
 
 <h2>Sales</h2>
 
-@Html.Partial("_Modals")
+@Scripts.Render("~/bundles/Library")
+@Html.Partial("_Modal")
 
 <table class="table table-light table-hover" id="ProductSoldsTable">
     <thead>
@@ -19,15 +20,17 @@
             <th>Action(Delete)</th>
         </tr>
     </thead>
-    <tbody id="BodyTag" data-bind="foreach: Customers">
+    <tbody id="BodyTag" data-bind="foreach: ProductSolds">
         <tr>
-            <td id="IdTag" data-bind="text: id"></td>
-            <td id="CustomerNameTag" data-bind="text: customername"></td>
-            <td id="ProductNameTag" data-bind="text: productname"></td>
-            <td id="StoreNameTag" data-bind="text: storename"></td>
+            <td style="display:none" id="IdTag" data-bind="text: id"></td>
+            <td id="CustomerNameTag" data-bind="text: customerid"></td>
+            <td id="ProductNameTag" data-bind="text: productid"></td>
+            <td id="StoreNameTag" data-bind="text: storeid"></td>
             <td id="DateSold" data-bind="text: dataesold"></td>
             <td>
                 <a id="EditTag" data-bind="attr: { 'href': '@Url.Action("Edit", "ProductSold")/' + id }" class="btn btn-warning">Edit</a>
+                </td>
+            <td>
                 <a id="DeleteTag" data-bind="attr: { 'href': '@Url.Action("Delete", "ProductSold")/' + id }" class="btn btn-danger">Delete</a>
 
             </td>
@@ -40,26 +43,26 @@
     <script>
         //Load table data
         $(function () {
-            function ProductSoldModel(id, customername, productname, storename, datesold) {
+            function ProductSoldModel(id, customerid, productid, storeid, datesold) {
                 var self = this;
 
-                //Two way binding for customer elements
+                //Two way binding for sales elements
                 self.id = ko.observable("");
-                self.customername = ko.observable("");
-                self.productname = ko.observable("");
-                self.storename = ko.observable("");
+                self.customerid = ko.observable("");
+                self.productid = ko.observable("");
+                self.storeid = ko.observable("");
                 self.datesold = ko.observable("");
 
-                var Product = {
+                var ProductSold = {
                     id: self.id,
-                    customername: self.customername,
-                    productname: self.productname,
-                    storename: self.storename,
+                    customerid: self.customerid,
+                    productid: self.productid,
+                    storeid: self.storeid,
                     datesold: self.datesold
                 };
 
-                self.Product = ko.observable();
-                self.Products = ko.observableArray([]);
+                self.ProductSold = ko.observable();
+                self.ProductSolds = ko.observableArray([]);
 
                 $.ajax({
                     url: 'api/productsolds',
@@ -68,7 +71,7 @@
                     contentType: 'application/json; charset=utf-8',
                     data: {},
                     success: function (data) {
-                        self.Products(data);
+                        self.ProductSolds(data);
                     }
                 });
 
@@ -84,9 +87,9 @@
                         success: function (data) {
                             self.ProductSold.push(data);
                             self.id(null);
-                            self.customername("");
-                            self.productname("");
-                            self.storename("");
+                            self.customerid("");
+                            self.productid("");
+                            self.storeid("");
                             self.datesold("");
 
                         }
@@ -95,7 +98,7 @@
                 //Delete Product Sold
                 self.delete = function () {
                     $.ajax({
-                        url: 'api/produtsolds' + id,
+                        url: 'api/productsolds' + id,
                         cache: false,
                         type: 'POST',
                         contentType: 'application/json; charset=utf-8',

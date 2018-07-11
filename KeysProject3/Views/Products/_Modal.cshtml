@@ -49,11 +49,11 @@
                     <form id="editProductForm">
                         <div class="form-group">
                             <label for="ProductName">Name</label>
-                            <input type="text" class="form-control" id="ProductName">
+                            <input data-bind="value: $root.name, valueUpdate: 'afterkeydown'" type="text" class="form-control" id="ProductName">
                         </div>
                         <div class="form-group">
                             <label for="ProductPrice">Price</label>
-                            <input type="text" class="form-control" id="ProductPrice">
+                            <input data-bind="value: $root.price, valueUpdate: 'afterkeydown'" type="text" class="form-control" id="ProductPrice">
                         </div>
                     </form>
                 </div>

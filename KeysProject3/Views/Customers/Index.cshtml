@@ -19,14 +19,16 @@
 
     <tbody id="BodyTag" data-bind="foreach: Customers">
         <tr>
-            <td id="IdTag" data-bind="text: id"></td>
+            <td style="display:none" id="IdTag" data-bind="text: id"></td>
             <td id="NameTag" data-bind="text: name"></td>
             <td id="AddressTag" data-bind="text: address"></td>
             <td>
-                <a id="EditTag" data-bind="attr: { 'href': '@Url.Action("Edit", "Customer")/' + id }" class="btn btn-warning">Edit</a>
-                <a id="DeleteTag" data-bind="attr: { 'href': '@Url.Action("Delete", "Customer")/' + id }" class="btn btn-danger">Delete</a>
-
+                <a id="EditTag" data-bind="#editCustomerModal" class="btn btn-warning">Edit</a>
             </td>
+            <td>
+                <a id="DeleteTag" data-bind="attr: { 'href': '@Url.Action("Delete", "Customers")/' + id }" class="btn btn-danger">Delete</a>
+            </td>
+            
         </tr>
     </tbody>
 </table>
@@ -88,7 +90,7 @@
                 //Delete Customer
                 self.delete = function () {
                     $.ajax({
-                        url: 'api/customers' + id,
+                        url: 'api/customer' + id,
                         cache: false,
                         type: 'POST',
                         contentType: 'application/json; charset=utf-8',

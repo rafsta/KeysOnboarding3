@@ -6,7 +6,7 @@
 <h2>Products</h2>
 
 @Scripts.Render("~/bundles/Library")
-@Html.Partial("_Modals")
+@Html.Partial("_Modal")
 
 <table class="table table-light table-hover" id="ProductsTable">
     <thead>
@@ -19,11 +19,13 @@
     </thead>
     <tbody id="BodyTag" data-bind="foreach: Products">
         <tr>
-            <td id="IdTag" data-bind="text: id"></td>
+            <td style="display:none" id="IdTag" data-bind="text: id"></td>
             <td id="NameTag" data-bind="text: name"></td>
             <td id="PriceTag" data-bind="text: price"></td>
             <td>
                 <a id="EditTag" data-bind="attr: { 'href': '@Url.Action("Edit", "Product")/' + id }" class="btn btn-warning">Edit</a>
+                </td>
+            <td>
                 <a id="DeleteTag" data-bind="attr: { 'href': '@Url.Action("Delete", "Product")/' + id }" class="btn btn-danger">Delete</a>
 
             </td>

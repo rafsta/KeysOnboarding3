@@ -57,19 +57,19 @@
                     <form id="editProductSoldForm">
                         <div class="form-group">
                             <label for="editProductSoldCustomerList">Customer Name</label>
-                            <select id="editProductSoldCustomerList" class="custom-select" required></select>
+                            <select data-bind="value: $root.customerid, valueUpdate: 'afterkeydown'" id="editProductSoldCustomerList" class="custom-select" required></select>
                         </div>
                         <div class="form-group">
                             <label for="editProductSoldProductList">Product Name</label>
-                            <select id="editProductSoldProductList" class="custom-select" required></select>
+                            <select data-bind="value: $root.productid, valueUpdate: 'afterkeydown'" id="editProductSoldProductList" class="custom-select" required></select>
                         </div>
                         <div class="form-group">
                             <label for="editProductSoldStoreList">Store Name</label>
-                            <select id="editProductSoldStoreList" class="custom-select" required></select>
+                            <select data-bind="value: $root.storeid, valueUpdate: 'afterkeydown'" id="editProductSoldStoreList" class="custom-select" required></select>
                         </div>
                         <div class="form-group">
                             <label for="editProductSoldDate">Date Sold</label>
-                            <input id="editProductSoldDate" type="text" class="form-control">
+                            <input data-bind="value: $root.datesold, valueUpdate: 'afterkeydown'" id="editProductSoldDate" type="text" class="form-control">
                         </div>
 
                     </form>

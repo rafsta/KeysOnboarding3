@@ -8,7 +8,7 @@ namespace KeysProject3.Controllers
 {
     public class ProductSoldsController : Controller
     {
-        // GET: ProductSolds
+        // GET: ProductSold
         public ActionResult Index()
         {
             return View();
