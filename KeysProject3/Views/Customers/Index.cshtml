@@ -23,10 +23,14 @@
             <td id="NameTag" data-bind="text: name"></td>
             <td id="AddressTag" data-bind="text: address"></td>
             <td>
-                <a id="EditTag" data-bind="#editCustomerModal" class="btn btn-warning">Edit</a>
+                <button class="btn btn-warning" data-target="#editCustomerModal" data-toggle="modal" type="button">
+                    Edit
+                </button>
             </td>
             <td>
-                <a id="DeleteTag" data-bind="attr: { 'href': '@Url.Action("Delete", "Customers")/' + id }" class="btn btn-danger">Delete</a>
+                <button class="btn btn-danger" data-target="#deleteCustomerModal" data-toggle="modal" type="button">
+                    Delete
+                </button>
             </td>
             
         </tr>

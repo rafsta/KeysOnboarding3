@@ -24,11 +24,14 @@
             <td id="NameTag" data-bind="text: name"></td>
             <td id="AddressTag" data-bind="text: address"></td>
             <td>
-                <a id="EditTag" data-bind="attr: { 'href': '@Url.Action("Edit", "Store")/' + id }" class="btn btn-warning">Edit</a>
-                </td>
+                <button class="btn btn-warning" data-target="#editStoreModal" data-toggle="modal" type="button">
+                    Edit
+                </button>
+            </td>
             <td>
-                <a id="DeleteTag" data-bind="attr: { 'href': '@Url.Action("Delete", "Store")/' + id }" class="btn btn-danger">Delete</a>
-
+                <button class="btn btn-danger" data-target="#deleteStoreModal" data-toggle="modal" type="button">
+                    Delete
+                </button>
             </td>
         </tr>
     </tbody>
