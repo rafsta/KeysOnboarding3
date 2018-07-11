@@ -22,13 +22,111 @@
     <tbody id="BodyTag" data-bind="foreach: Customers">
         <tr>
             <td id="IdTag" data-bind="text: id"></td>
-            <td id="NameTag" data-bind="text: name"></td>
-            <td id="AddressTag" data-bind="text: address"></td>
+            <td id="CustomerNameTag" data-bind="text: customername"></td>
+            <td id="ProductNameTag" data-bind="text: productname"></td>
+            <td id="StoreNameTag" data-bind="text: storename"></td>
+            <td id="DateSold" data-bind="text: dataesold"></td>
             <td>
-                <a id="EditTag" data-bind="attr: { 'href': '@Url.Action("Edit", "Customer")/' + id }" class="btn btn-warning">Edit</a>
-                <a id="DeleteTag" data-bind="attr: { 'href': '@Url.Action("Delete", "Customer")/' + id }" class="btn btn-danger">Delete</a>
+                <a id="EditTag" data-bind="attr: { 'href': '@Url.Action("Edit", "ProductSold")/' + id }" class="btn btn-warning">Edit</a>
+                <a id="DeleteTag" data-bind="attr: { 'href': '@Url.Action("Delete", "ProductSold")/' + id }" class="btn btn-danger">Delete</a>
 
             </td>
         </tr>
     </tbody>
 </table>
+
+@section scripts
+{
+    <script>
+        //Load table data
+        $(function () {
+            function ProductSoldModel(id, customername, productname, storename, datesold) {
+                var self = this;
+
+                //Two way binding for customer elements
+                self.id = ko.observable("");
+                self.customername = ko.observable("");
+                self.productname = ko.observable("");
+                self.storename = ko.observable("");
+                self.datesold = ko.observable("");
+
+                var Product = {
+                    id: self.id,
+                    customername: self.customername,
+                    productname: self.productname,
+                    storename: self.storename,
+                    datesold: self.datesold
+                };
+
+                self.Product = ko.observable();
+                self.Products = ko.observableArray([]);
+
+                $.ajax({
+                    url: 'api/productsolds',
+                    cache: false,
+                    type: 'GET',
+                    contentType: 'application/json; charset=utf-8',
+                    data: {},
+                    success: function (data) {
+                        self.Products(data);
+                    }
+                });
+
+                //Create Product Sold
+                self.create = function () {
+
+                    $.ajax({
+                        url: 'api/productsolds',
+                        cache: false,
+                        type: 'POST',
+                        contentType: 'application/json; charset=utf-8',
+                        data: ko.toJSON(ProductSold),
+                        success: function (data) {
+                            self.ProductSold.push(data);
+                            self.id(null);
+                            self.customername("");
+                            self.productname("");
+                            self.storename("");
+                            self.datesold("");
+
+                        }
+                    })
+                }
+                //Delete Product Sold
+                self.delete = function () {
+                    $.ajax({
+                        url: 'api/produtsolds' + id,
+                        cache: false,
+                        type: 'POST',
+                        contentType: 'application/json; charset=utf-8',
+                        data: id,
+                        success: function (data) {
+                            self.ProductSolds.remove(ProductSold);
+                        }
+                    })
+                }
+
+                //Update Product Sold
+                self.update = function () {
+                    $.ajax({
+                        url: 'api/productsolds',
+                        cache: false,
+                        type: 'PUT',
+                        contentType: 'application/json; charset=utf-8',
+                        data: ko.toJSON(Product),
+                        success: function (data) {
+                            self.ProductSolds.removeAll();
+                            self.ProductSolds(data); //Put the response in ObservableArray
+                            self.ProductSold(null);
+                            alert("Record Updated Successfully");
+                        }
+                    })
+                }
+
+            }
+
+            var ProductSoldViewModel = new ProductSoldModel();
+            ko.applyBindings(ProductSoldViewModel);
+        });
+    </script>
+}

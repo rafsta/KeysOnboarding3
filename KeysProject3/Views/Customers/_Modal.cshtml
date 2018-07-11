@@ -56,7 +56,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-success" data-dismiss="modal">No</button>
-                    <button type="button" class="btn btn-danger" id="deleteCustomerSubmit">Yes</button>
+                    <button data-bind="click: $root.delete" type="button" class="btn btn-danger" id="deleteCustomerSubmit">Yes</button>
                 </div>
             </div>
         </div>
@@ -87,7 +87,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="editCustomerSubmit">Save</button>
+                    <button data-bind="click: $root.update" type="button" class="btn btn-primary" id="editCustomerSubmit">Save</button>
                 </div>
             </div>
         </div>

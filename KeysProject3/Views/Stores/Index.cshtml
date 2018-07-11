@@ -30,3 +30,96 @@
         </tr>
     </tbody>
 </table>
+
+@section scripts
+{
+    <script>
+        //Load table data
+        $(function () {
+            function StoreModel(id, name, address) {
+                var self = this;
+
+                //Two way binding for customer elements
+                self.id = ko.observable("");
+                self.name = ko.observable("");
+                self.address = ko.observable("");
+
+                var Store = {
+                    id: self.id,
+                    name: self.name,
+                    price: self.address
+                };
+
+                self.Store = ko.observable();
+                self.Stores = ko.observableArray([]);
+
+                $.ajax({
+                    url: 'api/stores',
+                    cache: false,
+                    type: 'GET',
+                    contentType: 'application/json; charset=utf-8',
+                    data: {},
+                    success: function (data) {
+                        self.Stores(data);
+                    }
+                });
+
+                //Create Store
+                self.create = function () {
+
+                    $.ajax({
+                        url: 'api/stores',
+                        cache: false,
+                        type: 'POST',
+                        contentType: 'application/json; charset=utf-8',
+                        data: ko.toJSON(Store),
+                        success: function (data) {
+                            self.Stores.push(data);
+                            self.id(null);
+                            self.name("");
+                            self.address("");
+
+                        }
+                    })
+                }
+
+                //Delete Store
+                self.delete = function () {
+                    $.ajax({
+                        url: 'api/stores' + id,
+                        cache: false,
+                        type: 'POST',
+                        contentType: 'application/json; charset=utf-8',
+                        data: id,
+                        success: function (data) {
+                            self.Stores.remove(Store);
+                        }
+                    })
+                }
+
+                //Update Store
+                self.update = function () {
+                    $.ajax({
+                        url: 'api/stores',
+                        cache: false,
+                        type: 'PUT',
+                        contentType: 'application/json; charset=utf-8',
+                        data: ko.toJSON(Product),
+                        success: function (data) {
+                            self.Stores.removeAll();
+                            self.Stores(data); //Put the response in ObservableArray
+                            self.Store(null);
+                            alert("Record Updated Successfully");
+                        }
+                    })
+                }
+
+            }
+
+            var StoreViewModel = new StoreModel();
+            ko.applyBindings(StoreViewModel);
+        });
+
+
+
+    </script>}

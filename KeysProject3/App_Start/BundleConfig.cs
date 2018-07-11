@@ -9,11 +9,11 @@ namespace KeysProject3
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/Library").Include(
-
+                        "~/Scripts/jquery-3.3.1.js",
                         "~/Scripts/jquery-3.3.1.min.map",
                 "~/Scripts/knockout-3.4.2.js",
                 "~/Scripts/bootstrap.js",
-                        "~/Scripts/jquery-3.3.1.js",
+                "~/Scripts/knockout.validation.js",
                         "~/Scripts/knockout-3.4.2.debug.js"
                         ));
 

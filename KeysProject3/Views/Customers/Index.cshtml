@@ -32,68 +32,96 @@
 </table>
 
 
-
-
 @section scripts
 {
     <script>
         //Load table data
-        function CustomerModel(id, name, address) {
-            var self = this;
+        $(function () {
+            function CustomerModel(id, name, address) {
+                var self = this;
 
-            //Two way binding for customer elements
-            self.id = ko.observable("");
-            self.name = ko.observable("");
-            self.address = ko.observable("");
+                //Two way binding for customer elements
+                self.id = ko.observable("");
+                self.name = ko.observable("");
+                self.address = ko.observable("");
 
-            var Customer = {
-                id: self.id,
-                name: self.name,
-                address: self.address
-            }
+                var Customer = {
+                    id: self.id,
+                    name: self.name,
+                    address: self.address
+                };
 
-            self.Customer = ko.observable();
-            self.Customers = ko.observableArray([]);
+                self.Customer = ko.observable();
+                self.Customers = ko.observableArray([]);
 
-            $.ajax({
-                url: 'api/customers',
-                cache: false,
-                type: 'GET',
-                contentType: 'application/json; charset=utf-8',
-                data: {},
-                success: function (data) {
-                    self.Customers(data);
-                }
-            });
+                $.ajax({
+                    url: 'api/customers',
+                    cache: false,
+                    type: 'GET',
+                    contentType: 'application/json; charset=utf-8',
+                    data: {},
+                    success: function (data) {
+                        self.Customers(data);
+                    }
+                });
 
-            //Create Customer
-             self.create = function () {
-                 
+                //Create Customer
+                self.create = function () {
+
                     $.ajax({
-                        url: '@Url.Action("CreateCustomer", "customer")',
+                        url: 'api/customers',
                         cache: false,
                         type: 'POST',
                         contentType: 'application/json; charset=utf-8',
                         data: ko.toJSON(Customer),
                         success: function (data) {
-                            CustomerModel.customers.push(new Customer(data.id, data.name, data.address));
+                            //CustomerModel.customers.push(new Customer(data.id, data.name, data.address));
+                            self.Customers.push(data);
                             self.id(null);
                             self.name("");
                             self.address("");
 
                         }
                     })
+                }
 
-                
-                
+                //Delete Customer
+                self.delete = function () {
+                    $.ajax({
+                        url: 'api/customers' + id,
+                        cache: false,
+                        type: 'POST',
+                        contentType: 'application/json; charset=utf-8',
+                        data: id,
+                        success: function (data) {
+                            self.Customers.remove(Customer);
+                        }
+                    })
+                }
 
-             }
-            
+                //Update Customer
+                self.update = function () {
+                    $.ajax({
+                        url: 'api/customers',
+                        cache: false,
+                        type: 'PUT',
+                        contentType: 'application/json; charset=utf-8',
+                        data: ko.toJSON(Product),
+                        success: function (data) {
+                            self.Customers.removeAll();
+                            self.Customers(data); //Put the response in ObservableArray
+                            self.Customer(null);
+                            alert("Record Updated Successfully");
+                        }
+                    })
+                }
 
+            }
 
-        }
-             var CustomerViewModel= new CustomerModel();
-             ko.applyBindings(CustomerViewModel);
+            var CustomerViewModel = new CustomerModel();
+            ko.applyBindings(CustomerViewModel);
+        });
+             
 
 
     </script>}

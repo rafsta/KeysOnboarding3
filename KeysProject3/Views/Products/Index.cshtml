@@ -5,6 +5,7 @@
 
 <h2>Products</h2>
 
+@Scripts.Render("~/bundles/Library")
 @Html.Partial("_Modals")
 
 <table class="table table-light table-hover" id="ProductsTable">
@@ -16,16 +17,110 @@
             <th>Action(Delete)</th>
         </tr>
     </thead>
-    <tbody id="BodyTag" data-bind="foreach: Customers">
+    <tbody id="BodyTag" data-bind="foreach: Products">
         <tr>
             <td id="IdTag" data-bind="text: id"></td>
             <td id="NameTag" data-bind="text: name"></td>
-            <td id="AddressTag" data-bind="text: address"></td>
+            <td id="PriceTag" data-bind="text: price"></td>
             <td>
-                <a id="EditTag" data-bind="attr: { 'href': '@Url.Action("Edit", "Customer")/' + id }" class="btn btn-warning">Edit</a>
-                <a id="DeleteTag" data-bind="attr: { 'href': '@Url.Action("Delete", "Customer")/' + id }" class="btn btn-danger">Delete</a>
+                <a id="EditTag" data-bind="attr: { 'href': '@Url.Action("Edit", "Product")/' + id }" class="btn btn-warning">Edit</a>
+                <a id="DeleteTag" data-bind="attr: { 'href': '@Url.Action("Delete", "Product")/' + id }" class="btn btn-danger">Delete</a>
 
             </td>
         </tr>
     </tbody>
 </table>
+
+@section scripts
+{
+    <script>
+        //Load table data
+        $(function () {
+            function ProductModel(id, name, price) {
+                var self = this;
+
+                //Two way binding for customer elements
+                self.id = ko.observable("");
+                self.name = ko.observable("");
+                self.price = ko.observable("");
+
+                var Product = {
+                    id: self.id,
+                    name: self.name,
+                    price: self.price
+                };
+
+                self.Product = ko.observable();
+                self.Products = ko.observableArray([]);
+
+                $.ajax({
+                    url: 'api/products',
+                    cache: false,
+                    type: 'GET',
+                    contentType: 'application/json; charset=utf-8',
+                    data: {},
+                    success: function (data) {
+                        self.Products(data);
+                    }
+                });
+
+                //Create Product
+                self.create = function () {
+
+                    $.ajax({
+                        url: 'api/products',
+                        cache: false,
+                        type: 'POST',
+                        contentType: 'application/json; charset=utf-8',
+                        data: ko.toJSON(Product),
+                        success: function (data) {
+                            //ProductModel.products.push(new Customer(data.id, data.name, data.price));
+                            self.Products.push(data);
+                            self.id(null);
+                            self.name("");
+                            self.price("");
+
+                        }
+                    })
+                }
+
+                //Delete Product
+                self.delete = function () {
+                    $.ajax({
+                        url: 'api/produts' + id,
+                        cache: false,
+                        type: 'POST',
+                        contentType: 'application/json; charset=utf-8',
+                        data: id,
+                        success: function (data) {
+                            self.Products.remove(Product);
+                        }
+                    })
+                }
+
+                //Update Product
+                self.update = function () {
+                    $.ajax({
+                        url: 'api/products',
+                        cache: false,
+                        type: 'PUT',
+                        contentType: 'application/json; charset=utf-8',
+                        data: ko.toJSON(Product),
+                        success: function (data) {
+                            self.Products.removeAll();
+                            self.Products(data); //Put the response in ObservableArray
+                            self.Product(null);
+                            alert("Record Updated Successfully");
+                        }
+                    })
+                }
+
+            }
+
+            var ProductViewModel = new ProductModel();
+            ko.applyBindings(ProductViewModel);
+        });
+
+
+
+    </script>}
