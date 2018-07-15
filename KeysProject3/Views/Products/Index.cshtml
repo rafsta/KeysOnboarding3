@@ -8,7 +8,7 @@
 @Scripts.Render("~/bundles/Library")
 @Html.Partial("_Modal")
 
-<table class="table table-light table-hover" id="ProductsTable">
+<table data-bind="ProductModel" class="table table-light table-hover" id="ProductsTable">
     <thead>
         <tr>
             <th>Name</th>
@@ -45,9 +45,9 @@
                 var self = this;
 
                 //Two way binding for customer elements
-                self.id = ko.observable("");
-                self.name = ko.observable("");
-                self.price = ko.observable("");
+                self.id = ko.observable(id);
+                self.name = ko.observable(name);
+                self.price = ko.observable(price);
 
                 var Product = {
                     id: self.id,
@@ -56,74 +56,64 @@
                 };
 
                 self.Product = ko.observable();
-                self.Products = ko.observableArray([]);
-
-                $.ajax({
-                    url: 'api/products',
-                    cache: false,
-                    type: 'GET',
-                    contentType: 'application/json; charset=utf-8',
-                    data: {},
-                    success: function (data) {
-                        self.Products(data);
-                    }
+                self.Products = ko.observableArray();
+                
+                $.getJSON("/api/products", function (data) {
+                    self.Products(data);
+                }).fail(function (err) {
+                    console.error("Error " + err.status);
                 });
 
                 //Create Product
                 self.create = function () {
-
+                    var created = ko.toJSON(this);
                     $.ajax({
                         url: 'api/products',
                         cache: false,
                         type: 'POST',
                         contentType: 'application/json; charset=utf-8',
-                        data: ko.toJSON(Product),
+                        data: created,
                         success: function (data) {
-                            //ProductModel.products.push(new Customer(data.id, data.name, data.price));
-                            self.Products.push(data);
-                            self.id(null);
-                            self.name("");
-                            self.price("");
-
+                            location.reload(true);
                         }
-                    })
-                }
+                    });
+                };
 
                 //Delete Product
+                self.picked = ko.observable();
                 self.delete = function () {
+                    var id = self.picked().id;
                     $.ajax({
-                        url: 'api/produts' + id,
+                        url: 'api/products' + id,
                         cache: false,
                         type: 'POST',
                         contentType: 'application/json; charset=utf-8',
                         data: id,
                         success: function (data) {
-                            self.Products.remove(Product);
+                            location.reload(true);
                         }
-                    })
-                }
+                    });
+                };
 
                 //Update Product
                 self.update = function () {
+                    var updated = self.Product();
                     $.ajax({
-                        url: 'api/products',
+                        url: 'api/products' + updated.id,
                         cache: false,
                         type: 'PUT',
                         contentType: 'application/json; charset=utf-8',
-                        data: ko.toJSON(Product),
+                        data: ko.toJSON(updated),
                         success: function (data) {
-                            self.Products.removeAll();
-                            self.Products(data); //Put the response in ObservableArray
-                            self.Product(null);
-                            alert("Record Updated Successfully");
+                            location.reload(true);
                         }
-                    })
-                }
+                    });
+                };
 
             }
 
-            var ProductViewModel = new ProductModel();
-            ko.applyBindings(ProductViewModel);
+            var ProductModel = new ProductModel();
+            ko.applyBindings(ProductModel);
         });
 
 

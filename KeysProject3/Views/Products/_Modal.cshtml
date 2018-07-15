@@ -18,17 +18,17 @@
                     <form id="productForm">
                         <div class="form-group">
                             <label for="ProductName">Name</label>
-                            <input data-bind="value:$root.name, valueUpdate: 'afterkeydown'" type="text" class="form-control" id="productName" placeholder="Please Enter Product Name">
+                            <input data-bind="value:name, valueUpdate: 'afterkeydown'" type="text" class="form-control" id="productName" placeholder="Please Enter Product Name">
                         </div>
                         <div class="form-group">
                             <label for="ProductPrice">Price</label>
-                            <input data-bind="value:$root.price, valueUpdate: 'afterkeydown'"type="text" class="form-control" id="productPrice" placeholder="Please Enter Product Price">
+                            <input data-bind="value:price, valueUpdate: 'afterkeydown'"type="text" class="form-control" id="productPrice" placeholder="Please Enter Product Price">
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button data-bind="click:$root.create" type="button" class="btn btn-primary" id="productSubmit">Save</button>
+                    <button data-bind="click:create" type="button" class="btn btn-primary" id="productSubmit">Save</button>
                 </div>
             </div>
         </div>
@@ -37,7 +37,7 @@
     @*Edit Product Modal*@
     <div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" aria-labelledby="editProductModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
+            <div class="modal-content" >
                 <div class="modal-header">
                     <h5 class="modal-title" id="editProductModalLabel">Edit Product</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -46,20 +46,20 @@
                 </div>
                 <div class="modal-body">
                     <h4>Product Details</h4>
-                    <form id="editProductForm">
+                    <form id="editProductForm" data-bind="with: Product()">
                         <div class="form-group">
                             <label for="ProductName">Name</label>
-                            <input data-bind="value: $root.name, valueUpdate: 'afterkeydown'" type="text" class="form-control" id="ProductName">
+                            <input data-bind="value: $data.name, valueUpdate: 'afterkeydown'" type="text" class="form-control" id="ProductName">
                         </div>
                         <div class="form-group">
                             <label for="ProductPrice">Price</label>
-                            <input data-bind="value: $root.price, valueUpdate: 'afterkeydown'" type="text" class="form-control" id="ProductPrice">
+                            <input data-bind="value: $data.price, valueUpdate: 'afterkeydown'" type="text" class="form-control" id="ProductPrice">
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button data-bind="click: $root.update" type="button" class="btn btn-primary" id="editProductSubmit">Save</button>
+                    <button data-bind="click: update" type="button" class="btn btn-primary" id="editProductSubmit">Save</button>
                 </div>
             </div>
         </div>
@@ -68,7 +68,7 @@
     @*Delete Product Modal*@
     <div class="modal fade" id="deleteProductModal" tabindex="-1" role="dialog" aria-labelledby="deleteProductModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
+            <div class="modal-content"data-bind="with: picked">
                 <div class="modal-header">
                     <h5 class="modal-title" id="deleteProductModalLabel">Delete Product</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -80,7 +80,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-success" data-dismiss="modal">No</button>
-                    <button data-bind="click: $root.delete" type="button" class="btn btn-danger" id="deleteProductSubmit">Yes</button>
+                    <button data-bind="click: delete" type="button" class="btn btn-danger" id="deleteProductSubmit">Yes</button>
                 </div>
             </div>
         </div>

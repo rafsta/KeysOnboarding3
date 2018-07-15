@@ -1,6 +1,5 @@
-﻿
-@{
-    ViewBag.Title = "Index";
+﻿@{
+    ViewBag.Title = "Sales";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -9,7 +8,7 @@
 @Scripts.Render("~/bundles/Library")
 @Html.Partial("_Modal")
 
-<table class="table table-light table-hover" id="ProductSoldsTable">
+<table data-bind="ProductSoldModel" class="table table-light table-hover" id="ProductSoldsTable">
     <thead>
         <tr>
             <th>Customer Name</th>
@@ -20,20 +19,20 @@
             <th>Action(Delete)</th>
         </tr>
     </thead>
-    <tbody id="BodyTag" data-bind="foreach: ProductSolds">
+    <tbody id="BodyTag" data-bind="foreach: productsolds">
         <tr>
-            <td style="display:none" id="IdTag" data-bind="text: id"></td>
-            <td id="CustomerNameTag" data-bind="text: customerid"></td>
-            <td id="ProductNameTag" data-bind="text: productid"></td>
-            <td id="StoreNameTag" data-bind="text: storeid"></td>
-            <td id="DateSold" data-bind="text: dataesold"></td>
+            <td style="display:none" id="IdTag" data-bind="text: Id"></td>
+            <td id="CustomerNameTag" data-bind="text: customerId"></td>
+            <td id="ProductNameTag" data-bind="text: productId"></td>
+            <td id="StoreNameTag" data-bind="text: storeId"></td>
+            <td id="DateSold" data-bind="text: moment(dateSold).format('DD/MM/YYYY')"></td>
             <td>
-                <button class="btn btn-warning" data-target="#editProductSoldModal" data-toggle="modal" type="button">
+                <button data-bind="editBtn" class="btn btn-warning" data-target="#editProductSoldModal" data-toggle="modal" type="button">
                     Edit
                 </button>
             </td>
             <td>
-                <button class="btn btn-danger" data-target="#deleteProductSoldModal" data-toggle="modal" type="button">
+                <button data-bind="deleteBtn" class="btn btn-danger" data-target="#deleteProductSoldModal" data-toggle="modal" type="button">
                     Delete
                 </button>
             </td>
@@ -46,41 +45,70 @@
     <script>
         //Load table data
         $(function () {
-            function ProductSoldModel(id, customerid, productid, storeid, datesold) {
+            function ProductSoldModel() {
                 var self = this;
 
-                //Two way binding for sales elements
-                self.id = ko.observable("");
-                self.customerid = ko.observable("");
-                self.productid = ko.observable("");
-                self.storeid = ko.observable("");
-                self.datesold = ko.observable("");
+                //Two way binding for Product Sold elements
+                self.Id = ko.observable("");
+                self.customerId = ko.observable("");
+                self.productId = ko.observable("");
+                self.storeId = ko.observable("");
+                self.dateSold = ko.observable("");
+                self.customer = ko.observable("");
+                self.product = ko.observable("");
+                self.store = ko.observable("");
 
                 var ProductSold = {
-                    id: self.id,
-                    customerid: self.customerid,
-                    productid: self.productid,
-                    storeid: self.storeid,
-                    datesold: self.datesold
+                    Id: self.Id,
+                    customerId: self.customerId,
+                    productId: self.productId,
+                    storeId: self.storeId,
+                    dateSold: self.dateSold,
+                    customer: self.customer,
+                    product: self.product,
+                    store: self.store
                 };
 
-                self.ProductSold = ko.observable();
-                self.ProductSolds = ko.observableArray([]);
+                self.productSold = ko.observable();
+                self.productSolds = ko.observableArray();
 
-                $.ajax({
-                    url: 'api/productsolds',
-                    cache: false,
-                    type: 'GET',
-                    contentType: 'application/json; charset=utf-8',
-                    data: {},
-                    success: function (data) {
-                        self.ProductSolds(data);
-                    }
-                });
+                self.Message = ko.observable();
+
+                self.customerList = ko.observableArray();
+                self.storeList = ko.observableArray();
+                self.productList = ko.observableArray();
+
+                // Load data from all tables
+                loadTables();
+                function loadTables() {
+                    $.getJSON("/api/productsolds", function (data) {
+                        self.productSolds(data);
+                    }).fail(function (err) {
+                        self.Message("Error " + err.status);
+                    });
+
+                    $.getJSON("/api/customers", function (data) {
+                        self.customerList(data);
+                    }).fail(function (err) {
+                        console.error("Error " + err.status);
+                    });
+
+                    $.getJSON("/api/products", function (data) {
+                        self.productList(data);
+                    }).fail(function (err) {
+                        console.error("Error " + err.status);
+                    });
+
+                    $.getJSON("/api/stores", function (data) {
+                        self.storeList(data);
+                    }).fail(function (err) {
+                        console.error("Error " + err.status);
+                    });
+                }
 
                 //Create Product Sold
                 self.create = function () {
-
+                    var NewProductSold = ko.toJSON(this);
                     $.ajax({
                         url: 'api/productsolds',
                         cache: false,
@@ -89,50 +117,75 @@
                         data: ko.toJSON(ProductSold),
                         success: function (data) {
                             self.ProductSold.push(data);
-                            self.id(null);
-                            self.customerid("");
-                            self.productid("");
-                            self.storeid("");
+                            self.Id(null);
+                            self.customerId("");
+                            self.productId("");
+                            self.storeId("");
                             self.datesold("");
-
+                            location.reload(true);
                         }
-                    })
+                    }).fail(function (err) {
+                        console.error("Error " + err.status);
+                    });
+                };
+            
+
+                self.getPS = function () {
+                    self.productsolds.removeAll();
+                    $.getJSON("api/productsolds", function (data) {
+                        self.productsolds(data);
+                    }).fail(function (err) {
+                        console.error("Error " + err.status);
+                    });
+                };
+
+                self.pickedPS = ko.observable();
+                self.productsolds = ko.observableArray();
+                self.deleteBtn = function (productsold) {
+                    self.pickedPS(productsold);
                 }
+
+                
                 //Delete Product Sold
                 self.delete = function () {
+                    var id = self.pickedPS().id;
                     $.ajax({
                         url: 'api/productsolds' + id,
                         cache: false,
-                        type: 'POST',
+                        type: 'DELETE',
                         contentType: 'application/json; charset=utf-8',
                         data: id,
                         success: function (data) {
-                            self.ProductSolds.remove(ProductSold);
+                            location.reload(true);
                         }
-                    })
-                }
-
+                    }).fail(function (err) {
+                        console.error("Error " + err.status);
+                    });
+                };
+                    
                 //Update Product Sold
                 self.update = function () {
+                    var UPDATE = self.ProductSold();
                     $.ajax({
-                        url: 'api/productsolds',
+                        url: 'api/productsolds' + self.ProductSold().id,
                         cache: false,
                         type: 'PUT',
                         contentType: 'application/json; charset=utf-8',
-                        data: ko.toJSON(Product),
+                        data: ko.toJSON(ProductSold),
                         success: function (data) {
-                            self.ProductSolds.removeAll();
-                            self.ProductSolds(data); //Put the response in ObservableArray
-                            self.ProductSold(null);
-                            alert("Record Updated Successfully");
+                            location.reload(true);
+                        },
+                        error: function (xhr) {
+                            alert(xhr.responseText);
                         }
-                    })
-                }
+                    }).fail(function (err) {
+                        console.error("Error " + err.status);
+                    });
+                };
 
             }
-
-            var ProductSoldViewModel = new ProductSoldModel();
-            ko.applyBindings(ProductSoldViewModel);
+            var ProductSoldModel = new ProductSoldModel();
+            ko.applyBindings(ProductSoldModel);
         });
     </script>
 }

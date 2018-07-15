@@ -4,7 +4,7 @@
     </button><br /><br />
 
     @*Add Store modal*@
-    <div class="modal fade" id="storeModal" tabindex="-1" role="dialog" aria-labelledby="storeModalLabel" aria-hidden="true">
+    <div class="modal" id="storeModal" tabindex="-1" role="dialog" aria-labelledby="storeModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -17,24 +17,24 @@
                     <form id="storeForm">
                         <div class="form-group">
                             <label for="storeName">Name</label>
-                            <input data-bind="value: $root.storename, valueUpdate: 'afterkeydown'" type="text" class="form-control" id="storeName" placeholder="Please Enter Store Name">
+                            <input data-bind="value: name, valueUpdate: 'afterkeydown'" type="text" class="form-control" id="storeName" placeholder="Please Enter Store Name">
                         </div>
                         <div class="form-group">
                             <label for="storeAddress">Address</label>
-                            <input data-bind="value:$root.address, valueUpdate: 'afterkeydown'"type="text" class="form-control" id="storeAddress" placeholder="Please Enter Store Address">
+                            <input data-bind="value:address, valueUpdate: 'afterkeydown'"type="text" class="form-control" id="storeAddress" placeholder="Please Enter Store Address">
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button data-bind="click:$root.create"type="button" class="btn btn-primary" id="storeSubmit">Save</button>
+                    <button data-bind="click:create"type="button" class="btn btn-primary" id="storeSubmit">Save</button>
                 </div>
             </div>
         </div>
     </div>
 
     @*Edit Store Modal*@
-    <div class="modal fade" id="editStoreModal" tabindex="-1" role="dialog" aria-labelledby="editStoreModalLabel" aria-hidden="true">
+    <div class="modal" id="editStoreModal" tabindex="-1" role="dialog" aria-labelledby="editStoreModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -48,26 +48,26 @@
                     <form id="editStoreForm">
                         <div class="form-group">
                             <label for="StoreName">Name</label>
-                            <input data-bind="value: $root.name, valueUpdate: 'afterkeydown'" type="text" class="form-control" id="StoreName">
+                            <input data-bind="$data.value: name, valueUpdate: 'afterkeydown'" type="text" class="form-control" id="StoreName">
                         </div>
                         <div class="form-group">
                             <label for="StoreAddress">Address</label>
-                            <input data-bind="value: $root.address, valueUpdate: 'afterkeydown'" type="text" class="form-control" id="StoreAddress">
+                            <input data-bind="value: $data.address, valueUpdate: 'afterkeydown'" type="text" class="form-control" id="StoreAddress">
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button data-bind="click: $root.update" type="button" class="btn btn-primary" id="editStoreSubmit">Save</button>
+                    <button data-bind="click: update" type="button" class="btn btn-primary" id="editStoreSubmit">Save</button>
                 </div>
             </div>
         </div>
     </div>
 
     @*Delete Store Modal*@
-    <div class="modal fade" id="deleteStoreModal" tabindex="-1" role="dialog" aria-labelledby="deleteStoreModalLabel" aria-hidden="true">
+    <div class="modal" id="deleteStoreModal" tabindex="-1" role="dialog" aria-labelledby="deleteStoreModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
+            <div class="modal-content" data-bind="with: DELETE">
                 <div class="modal-header">
                     <h5 class="modal-title" id="DeleteStoreModalLabel">Delete Store</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -79,7 +79,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-success" data-dismiss="modal">No</button>
-                    <button data-bind="click: $root.delete" type="button" class="btn btn-danger" id="deleteStoreSubmit">Yes</button>
+                    <button data-bind="click: delete" type="button" class="btn btn-danger" id="deleteStoreSubmit">Yes</button>
                 </div>
             </div>
         </div>

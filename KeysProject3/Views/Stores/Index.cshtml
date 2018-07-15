@@ -1,6 +1,5 @@
-﻿
-@{
-    ViewBag.Title = "Index";
+﻿@{
+    ViewBag.Title = "Stores";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -24,12 +23,12 @@
             <td id="NameTag" data-bind="text: name"></td>
             <td id="AddressTag" data-bind="text: address"></td>
             <td>
-                <button class="btn btn-warning" data-target="#editStoreModal" data-toggle="modal" type="button">
+                <button data-bind="editBtn" class="btn btn-warning" data-target="#editStoreModal" data-toggle="modal" type="button">
                     Edit
                 </button>
             </td>
             <td>
-                <button class="btn btn-danger" data-target="#deleteStoreModal" data-toggle="modal" type="button">
+                <button data-bind="deleteBtn" class="btn btn-danger" data-target="#deleteStoreModal" data-toggle="modal" type="button">
                     Delete
                 </button>
             </td>
@@ -38,7 +37,7 @@
 </table>
 
 @section scripts
-{
+    {
     <script>
         //Load table data
         $(function () {
@@ -57,22 +56,17 @@
                 };
 
                 self.Store = ko.observable();
-                self.Stores = ko.observableArray([]);
+                self.Stores = ko.observableArray();
 
-                $.ajax({
-                    url: 'api/stores',
-                    cache: false,
-                    type: 'GET',
-                    contentType: 'application/json; charset=utf-8',
-                    data: {},
-                    success: function (data) {
-                        self.Stores(data);
-                    }
+                $.getJSON("/api/stores", function (data) {
+                    self.Stores(data);
+                }).fail(function (err) {
+                    console.error("Error " + err.status);
                 });
 
                 //Create Store
                 self.create = function () {
-
+                    var data = created;
                     $.ajax({
                         url: 'api/stores',
                         cache: false,
@@ -80,17 +74,17 @@
                         contentType: 'application/json; charset=utf-8',
                         data: ko.toJSON(Store),
                         success: function (data) {
-                            self.Stores.push(data);
-                            self.id(null);
-                            self.name("");
-                            self.address("");
-
-                        }
-                    })
-                }
+                            location.reload(true);
+                        }.fail(function (err) {
+                            console.error("Error " + err.status);
+                        })
+                    });
+                };
 
                 //Delete Store
+                self.DELETE = ko.observable();
                 self.delete = function () {
+                    var id = self.DELETE().id;
                     $.ajax({
                         url: 'api/stores' + id,
                         cache: false,
@@ -98,34 +92,37 @@
                         contentType: 'application/json; charset=utf-8',
                         data: id,
                         success: function (data) {
-                            self.Stores.remove(Store);
-                        }
-                    })
-                }
+                            location.reload(true);
+                        }.fail(function (err) {
+                            console.error("Error " + err.status);
+                        })
+                    });
+                };
 
                 //Update Store
+                self.editBtn = function (Store) {
+                    self.Store(Store);
+                }
+
                 self.update = function () {
+                    var UPDATE = self.Store();
                     $.ajax({
-                        url: 'api/stores',
+                        url: 'api/stores'+UPDATE.id,
                         cache: false,
                         type: 'PUT',
                         contentType: 'application/json; charset=utf-8',
-                        data: ko.toJSON(Product),
+                        data: ko.toJSON(Store),
                         success: function (data) {
-                            self.Stores.removeAll();
-                            self.Stores(data); //Put the response in ObservableArray
-                            self.Store(null);
-                            alert("Record Updated Successfully");
-                        }
-                    })
-                }
-
+                            location.reload(true);
+                        }.fail(function (err) {
+                            console.error("Error " + err.status);
+                        })
+                    });
+                };
             }
-
             var StoreViewModel = new StoreModel();
             ko.applyBindings(StoreViewModel);
         });
-
 
 
     </script>}

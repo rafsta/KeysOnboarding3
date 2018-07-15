@@ -18,25 +18,28 @@
                     <form id="productSoldForm">
                         <div class="form-group">
                             <label for="productSoldCustomerList">Customer Name</label>
-                            <select data-bind="value:$root.customername, valueUpdate: 'afterkeydown'" id="productSoldCustomerList" class="custom-select" required></select>
+                            <select data-bind="options:customerList(), optionsText: 'name',optionsValue: 'id',
+                                    value: customerId, valueUpdate: 'afterkeydown'" id="productSoldCustomerList" class="custom-select" required></select>
                         </div>
                         <div class="form-group">
                             <label for="productSoldProductList">Product Name</label>
-                            <select data-bind="value:$root.productname, valueUpdate: 'afterkeydown'" id="productSoldProductList" class="custom-select" required></select>
+                            <select data-bind="options:productList(), optionsText: 'name',optionsValue: 'id',
+                                    value: productId, valueUpdate: 'afterkeydown'" id="productSoldProductList" class="custom-select" required></select>
                         </div>
                         <div class="form-group">
                             <label for="productSoldStoreList">Store Name</label>
-                            <select data-bind="value:$root.storename, valueUpdate: 'afterkeydown'"id="productSoldStoreList" class="custom-select" required></select>
+                            <select data-bind="options:storeList(), optionsText: 'name',optionsValue: 'id',
+                                    value: storeId, valueUpdate: 'afterkeydown'" id="productSoldStoreList" class="custom-select" required></select>
                         </div>
                         <div class="form-group">
                             <label for="productDateSold">Date Sold</label>
-                            <input data-bind="value:$root.datesold, valueUpdate: 'afterkeydown'" id="productDateSold" type="text" class="form-control" placeholder="DD/MM/YYYY">
+                            <input data-bind="date:dateSold,dateFormat: 'YYYY-MM-DD', value: dateSold, valueUpdate: 'afterkeydown'" id="productDateSold" type="text" class="form-control" placeholder="DD/MM/YYYY">
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button data-bind="click:$root.create" type="button" class="btn btn-primary" id="productSoldSubmit">Save</button>
+                    <button data-bind="click:create" type="button" class="btn btn-primary" id="productSoldSubmit">Save</button>
                 </div>
             </div>
         </div>
@@ -57,26 +60,26 @@
                     <form id="editProductSoldForm">
                         <div class="form-group">
                             <label for="editProductSoldCustomerList">Customer Name</label>
-                            <select data-bind="value: $root.customerid, valueUpdate: 'afterkeydown'" id="editProductSoldCustomerList" class="custom-select" required></select>
+                            <select data-bind="options: customer, valueUpdate: 'afterkeydown'" id="editProductSoldCustomerList" class="custom-select" required></select>
                         </div>
                         <div class="form-group">
                             <label for="editProductSoldProductList">Product Name</label>
-                            <select data-bind="value: $root.productid, valueUpdate: 'afterkeydown'" id="editProductSoldProductList" class="custom-select" required></select>
+                            <select data-bind="optons: product, valueUpdate: 'afterkeydown'" id="editProductSoldProductList" class="custom-select" required></select>
                         </div>
                         <div class="form-group">
                             <label for="editProductSoldStoreList">Store Name</label>
-                            <select data-bind="value: $root.storeid, valueUpdate: 'afterkeydown'" id="editProductSoldStoreList" class="custom-select" required></select>
+                            <select data-bind="options: store, valueUpdate: 'afterkeydown'" id="editProductSoldStoreList" class="custom-select" required></select>
                         </div>
                         <div class="form-group">
                             <label for="editProductSoldDate">Date Sold</label>
-                            <input data-bind="value: $root.datesold, valueUpdate: 'afterkeydown'" id="editProductSoldDate" type="text" class="form-control">
+                            <input data-bind="value: dateSold, valueUpdate: 'afterkeydown'" id="editProductSoldDate" type="text" class="form-control">
                         </div>
 
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button data-bind="click: $root.update" type="button" class="btn btn-primary" id="editProductSoldSubmit">Save</button>
+                    <button data-bind="click: update" type="button" class="btn btn-primary" id="editProductSoldSubmit">Save</button>
                 </div>
             </div>
         </div>
@@ -92,12 +95,26 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" data-bind="pickedPS">
                     Do you want to delete this Product Sold?
+                    <ul>
+                        <li>
+                            <strong>Customer Name: </strong><span data-bind="text:$data.customer.name"></span>
+                        </li>
+                        <li>
+                            <strong>Product Name: </strong><span data-bind="text:$data.product.name"></span>
+                        </li>
+                        <li>
+                            <strong>Store Name: </strong><span data-bind="text:$data.store.name"></span>
+                        </li>
+                        <li>
+                            <strong>Date Sold: </strong><span data-bind="text:moment($data.dateSold).format('DD/MM/YYYY')"></span>
+                        </li>
+                    </ul>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-success" data-dismiss="modal">No</button>
-                    <button data-bind="click: $root.delete" type="button" class="btn btn-danger" id="deleteProductSoldSubmit">Yes</button>
+                    <button data-bind="click: delete" type="button" class="btn btn-danger" id="deleteProductSoldSubmit">Yes</button>
                 </div>
             </div>
         </div>

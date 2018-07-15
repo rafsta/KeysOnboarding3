@@ -1,13 +1,13 @@
 ﻿<section>
     <br />
-    <button class="btn btn-primary" data-target="#CustomerModal" data-toggle="modal" type="button">
+    <button class="btn btn-primary" data-target="#createCustomerModal" data-toggle="modal" type="button">
         Add Customer
     </button>
     <br />
     <br />
 
     @*Add customer modal*@
-    <div class="modal fade" id="CustomerModal" tabindex="-1" role="dialog" aria-labelledby="CustomerModalLabel" aria-hidden="true">
+    <div class="modal fade" id="createCustomerModal" tabindex="-1" role="dialog" aria-labelledby="CustomerModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -21,21 +21,21 @@
                     <form id="CustomerForm" action="#">
                         <div class="form-group">
                             <label for="customerName">Name</label>
-                            <input data-bind="value: $root.name, valueUpdate: 'afterkeydown'" type="text" class="form-control" id="CustomerName" placeholder="Please Enter Your Name">
+                            <input data-bind="value: name, valueUpdate: 'afterkeydown'" type="text" class="form-control" id="CustomerName" placeholder="Please Enter Your Name">
                         </div>
                         <div class="form-group">
                             <label for="customerAddress">Address</label>
-                            <input data-bind="value: $root.address, valueUpdate: 'afterkeydown'"  type="text" class="form-control" id="CustomerAddress" placeholder="Please Enter Your Address">
+                            <input data-bind="value:address, valueUpdate: 'afterkeydown'"  type="text" class="form-control" id="CustomerAddress" placeholder="Please Enter Your Address">
                         </div>
-                        <p>Name of customer: <strong data-bind="text: $root.name"></strong></p>
-                        <p>Address of customer: <strong data-bind="text: $root.address"></strong></p>
+                        <p>Name of customer: <strong data-bind="text: name"></strong></p>
+                        <p>Address of customer: <strong data-bind="text:address"></strong></p>
 </form>
                 </div>
 
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button data-bind="click: $root.create" value="Create" type="button" class="btn btn-primary" id="CustomerSubmit">Save</button>
+                    <button data-bind="click:create" value="Create" type="button" class="btn btn-primary" id="CustomerSubmit">Save</button>
                 </div>
             </div>
         </div>
@@ -56,7 +56,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-success" data-dismiss="modal">No</button>
-                    <button data-bind="click: $root.delete" type="button" class="btn btn-danger" id="deleteCustomerSubmit">Yes</button>
+                    <button data-bind="click:delete" type="button" class="btn btn-danger" id="deleteCustomerSubmit">Yes</button>
                 </div>
             </div>
         </div>
@@ -77,17 +77,17 @@
                     <form id="editCustomerForm">
                         <div class="form-group">
                             <label for="customerName">Name</label>
-                            <input data-bind="value: $root.name, valueUpdate: 'afterkeydown'" type="text" class="form-control" id="customerName">
+                            <input data-bind="value: name, valueUpdate: 'afterkeydown'" type="text" class="form-control" id="customerName">
                         </div>
                         <div class="form-group">
                             <label for="customerAddress">Address</label>
-                            <input data-bind="value: $root.address, valueUpdate: 'afterkeydown'" type="text" class="form-control" id="customerAddress">
+                            <input data-bind="value: address, valueUpdate: 'afterkeydown'" type="text" class="form-control" id="customerAddress">
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button data-bind="click: $root.update" type="button" class="btn btn-primary" id="editCustomerSubmit">Save</button>
+                    <button data-bind="update" type="button" class="btn btn-primary" id="editCustomerSubmit">Save</button>
                 </div>
             </div>
         </div>

@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Customers";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -32,7 +32,7 @@
                     Delete
                 </button>
             </td>
-            
+
         </tr>
     </tbody>
 </table>
@@ -60,39 +60,33 @@
                 self.Customer = ko.observable();
                 self.Customers = ko.observableArray([]);
 
-                $.ajax({
-                    url: 'api/customers',
-                    cache: false,
-                    type: 'GET',
-                    contentType: 'application/json; charset=utf-8',
-                    data: {},
-                    success: function (data) {
-                        self.Customers(data);
-                    }
+                $.getJSON("api/customers", function (data) {
+                    self.Customers(data);
+                }).fail(function (err) {
+                    console.error("Error " + err.status);
                 });
 
                 //Create Customer
                 self.create = function () {
 
-                    $.ajax({
-                        url: 'api/customers',
-                        cache: false,
+                    $.toJSON({url:'api/customers',
                         type: 'POST',
                         contentType: 'application/json; charset=utf-8',
-                        data: ko.toJSON(Customer),
+                        data: Customer,
                         success: function (data) {
-                            //CustomerModel.customers.push(new Customer(data.id, data.name, data.address));
                             self.Customers.push(data);
                             self.id(null);
                             self.name("");
                             self.address("");
-
+                            location.reload(true);
                         }
                     })
                 }
 
                 //Delete Customer
+                self.DELETE = ko.observable();
                 self.delete = function () {
+                    var id = self.DELETE().id;
                     $.ajax({
                         url: 'api/customer' + id,
                         cache: false,
@@ -101,23 +95,25 @@
                         data: id,
                         success: function (data) {
                             self.Customers.remove(Customer);
+                            location.reload(true);
                         }
                     })
                 }
 
                 //Update Customer
                 self.update = function () {
+                    var UPDATE = self.Customer();
                     $.ajax({
                         url: 'api/customers',
                         cache: false,
                         type: 'PUT',
                         contentType: 'application/json; charset=utf-8',
-                        data: ko.toJSON(Product),
+                        data: ko.toJSON(Customer),
                         success: function (data) {
                             self.Customers.removeAll();
                             self.Customers(data); //Put the response in ObservableArray
                             self.Customer(null);
-                            alert("Record Updated Successfully");
+                            location.reload(true);
                         }
                     })
                 }
@@ -127,7 +123,7 @@
             var CustomerViewModel = new CustomerModel();
             ko.applyBindings(CustomerViewModel);
         });
-             
+
 
 
     </script>}
