@@ -45,14 +45,14 @@
                 var self = this;
 
                 //Two way binding for customer elements
-                self.id = ko.observable("");
-                self.name = ko.observable("");
-                self.address = ko.observable("");
+                self.id = ko.observable(id);
+                self.name = ko.observable(name).extend({ required: "Please enter a name for the store." });
+                self.address = ko.observable(address).extend({ required: "Please enter an address for the store." });
 
                 var Store = {
                     id: self.id,
                     name: self.name,
-                    price: self.address
+                    address: self.address
                 };
 
                 self.Store = ko.observable();
@@ -90,7 +90,7 @@
                         cache: false,
                         type: 'POST',
                         contentType: 'application/json; charset=utf-8',
-                        data: id,
+                        data: Id,
                         success: function (data) {
                             location.reload(true);
                         }.fail(function (err) {
@@ -103,11 +103,11 @@
                 self.editBtn = function (Store) {
                     self.Store(Store);
                 }
-
+                self.UPDATE = ko.observable();
                 self.update = function () {
-                    var UPDATE = self.Store();
+                    var id = self.UPDATE().id;
                     $.ajax({
-                        url: 'api/stores'+UPDATE.id,
+                        url: 'api/stores' + UPDATE.id,
                         cache: false,
                         type: 'PUT',
                         contentType: 'application/json; charset=utf-8',

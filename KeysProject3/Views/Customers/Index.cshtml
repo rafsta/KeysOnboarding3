@@ -7,7 +7,7 @@
 @Html.Partial("_Modal")
 <h2>Customers</h2>
 
-<table class="table table-light table-hover" id="CustomersTable" data-bind="visible: Customers().length > 0">
+<table class="table table-light table-hover" id="CustomersTable" data-bind="CustomerModel">
     <thead>
         <tr>
             <th>Customer Name</th>
@@ -17,18 +17,18 @@
         </tr>
     </thead>
 
-    <tbody id="BodyTag" data-bind="foreach: Customers">
+    <tbody id="BodyTag" data-bind="foreach: customers">
         <tr>
             <td style="display:none" id="IdTag" data-bind="text: id"></td>
             <td id="NameTag" data-bind="text: name"></td>
             <td id="AddressTag" data-bind="text: address"></td>
             <td>
-                <button class="btn btn-warning" data-target="#editCustomerModal" data-toggle="modal" type="button">
+                <button data-bind="$parent.updateBtn" class="btn btn-warning" data-target="#editCustomerModal" data-toggle="modal" type="button">
                     Edit
                 </button>
             </td>
             <td>
-                <button class="btn btn-danger" data-target="#deleteCustomerModal" data-toggle="modal" type="button">
+                <button data-bind="$parent.deleteBtn" class="btn btn-danger" data-target="#deleteCustomerModal" data-toggle="modal" type="button">
                     Delete
                 </button>
             </td>
@@ -43,85 +43,102 @@
     <script>
         //Load table data
         $(function () {
-            function CustomerModel(id, name, address) {
-                var self = this;
 
+            //Customise default validation configuration
+            ko.validation.init({
+                messagesOnModified:true, //Validation activated by triggers
+                parseInputAttributes: true //Validation by HTML5 validation attributes
+            });
+            
+            function Customer(data) {
+                this.id = ko.observable(data.id);
+                this.name = ko.observable(data.name).extend({ required: { message: 'Please enter a name for the customer.' } });
+                this.address = ko.observable(data.address).extend({ required: { message: 'Please enter an address for the customer.' } });
+            }
+
+            var CustomerModel = {
                 //Two way binding for customer elements
-                self.id = ko.observable("");
-                self.name = ko.observable("");
-                self.address = ko.observable("");
+                id: ko.observable(),
+                name: ko.observable().extend({ required: { message: "Please enter a name for the customer." }}),
+                address: ko.observable().extend({ required: { message: "Please enter an address for the customer." }}),
+                customer: ko.observable(),
+                customers: ko.observableArray(),
 
-                var Customer = {
-                    id: self.id,
-                    name: self.name,
-                    address: self.address
-                };
-
-                self.Customer = ko.observable();
-                self.Customers = ko.observableArray([]);
-
-                $.getJSON("api/customers", function (data) {
-                    self.Customers(data);
-                }).fail(function (err) {
-                    console.error("Error " + err.status);
-                });
-
+                //Load Customer data to table
+                loadCustomers: function () {
+                    CustomerModel.customers.removeAll();
+                    $.getJSON("api/customers", function (data) {
+                        $.each(data, function (key, value) {//jQuery loop
+                            CustomerModel.customers.push(new Customer(value));
+                        });
+                    });
+                },
+                
                 //Create Customer
-                self.create = function () {
-
-                    $.toJSON({url:'api/customers',
-                        type: 'POST',
-                        contentType: 'application/json; charset=utf-8',
-                        data: Customer,
-                        success: function (data) {
-                            self.Customers.push(data);
-                            self.id(null);
-                            self.name("");
-                            self.address("");
-                            location.reload(true);
-                        }
-                    })
-                }
-
-                //Delete Customer
-                self.DELETE = ko.observable();
-                self.delete = function () {
-                    var id = self.DELETE().id;
+                create: function () {
+                    var created = ko.toJSON(this);
                     $.ajax({
-                        url: 'api/customer' + id,
+                        url: '/api/customers/',
                         cache: false,
                         type: 'POST',
                         contentType: 'application/json; charset=utf-8',
-                        data: id,
+                        data: created,
                         success: function (data) {
-                            self.Customers.remove(Customer);
                             location.reload(true);
+                        },
+                            error: function (xhr) {
+                            alert(xhr.responseText);
                         }
-                    })
-                }
+                    });
+                },
+
+                //Delete Customer
+                deleteCustomer: ko.observable(),
+                deleteBtn: function (customer) {
+                    CustomerModel.deleteCustomer(customer);
+                },
+                deleteCust : function (customer) {
+                    var id = ko.toJS(CustomerModel.deleteCustomer()).id;
+                    $.ajax({
+                        url: "/api/customers/" + id,
+                        cache: false,
+                        type: "POST",
+                        contentType: 'application/json; charset=utf-8',
+                        success: function () {
+                            location.reload(true);
+                        },                        
+                            error: function (xhr) {
+                            alert(xhr.responseText);
+                        }
+                    });
+                },
 
                 //Update Customer
-                self.update = function () {
-                    var UPDATE = self.Customer();
+                updateBtn: function (customer) {
+                    CustomerModel.updateCustomer(customer);
+                },
+                changeCustomer: function () {
+                    var updatedCustomer = ko.toJS(CustomerModel.updateCustomer);
                     $.ajax({
-                        url: 'api/customers',
+                        url: 'api/customers' + updatedCustomer.id,
                         cache: false,
                         type: 'PUT',
                         contentType: 'application/json; charset=utf-8',
                         data: ko.toJSON(Customer),
-                        success: function (data) {
-                            self.Customers.removeAll();
-                            self.Customers(data); //Put the response in ObservableArray
-                            self.Customer(null);
+                        success: function () {
                             location.reload(true);
+                        },
+                        error: function (xhr) {
+                            alert(xhr.responseText);
                         }
-                    })
-                }
+                    });
+                },
 
             }
-
-            var CustomerViewModel = new CustomerModel();
-            ko.applyBindings(CustomerViewModel);
+            //Validate all properties of CustomerModel and its 'child' properties
+            CustomerModel.errors = ko.validation.group(CustomerModel, { deep: true });
+            ko.applyBindings(CustomerModel);
+            CustomerModel.loadCustomers();
         });
 
 

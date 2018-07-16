@@ -49,14 +49,14 @@
                 var self = this;
 
                 //Two way binding for Product Sold elements
-                self.Id = ko.observable("");
-                self.customerId = ko.observable("");
-                self.productId = ko.observable("");
-                self.storeId = ko.observable("");
-                self.dateSold = ko.observable("");
-                self.customer = ko.observable("");
-                self.product = ko.observable("");
-                self.store = ko.observable("");
+                self.id = ko.observable(data.id);
+                self.customerId = ko.observable(data.customerId);
+                self.productId = ko.observable(data.productId);
+                self.storeId = ko.observable(data.storeId);
+                self.dateSold = ko.observable(data.dateSold).extend({ required: { message: 'Date Sold is invalid.' } });
+                self.customer = ko.observable(data.customer);
+                self.product = ko.observable(data.product);
+                self.store = ko.observable(data.store);
 
                 var ProductSold = {
                     Id: self.Id,

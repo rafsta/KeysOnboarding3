@@ -59,7 +59,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button data-bind="click: update" type="button" class="btn btn-primary" id="editProductSubmit">Save</button>
+                    <button data-bind="click: changeProduct" type="button" class="btn btn-primary" id="editProductSubmit">Save</button>
                 </div>
             </div>
         </div>
@@ -77,10 +77,18 @@
                 </div>
                 <div class="modal-body">
                     Did you want to delete this Product?
+                    <ul>
+                        <li>
+                            <strong>Name: <span data-bind="text:$data.name"></span></strong>
+                        </li>
+                        <li>
+                            <strong>Price: <span data-bind="text:$data.price"></span></strong>
+                        </li>
+                    </ul>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-success" data-dismiss="modal">No</button>
-                    <button data-bind="click: delete" type="button" class="btn btn-danger" id="deleteProductSubmit">Yes</button>
+                    <button data-bind="click: deleteProd" type="button" class="btn btn-danger" id="deleteProductSubmit">Yes</button>
                 </div>
             </div>
         </div>

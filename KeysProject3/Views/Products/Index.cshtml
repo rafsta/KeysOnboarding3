@@ -41,31 +41,39 @@
     <script>
         //Load table data
         $(function () {
-            function ProductModel(id, name, price) {
-                var self = this;
 
+            //Customise default validation configuration
+            ko.validation.init({
+                messagesOnModified: true, //Validation activated by triggers
+                parseInputAttributes: true //Validation by HTML5 validation attributes
+            });
+
+            function Product(data) {
                 //Two way binding for customer elements
-                self.id = ko.observable(id);
-                self.name = ko.observable(name);
-                self.price = ko.observable(price);
+                this.id = ko.observable(data.id);
+                this.name = ko.observable(data.name).extend({ required: "Please enter a name for the product." });
+                this.price = ko.observable(data.price).extend({ required: "Please enter a price for the product." });
+            }
 
-                var Product = {
-                    id: self.id,
-                    name: self.name,
-                    price: self.price
-                };
+            var ProductModel = {
+                    id: ko.observable(),
+                    name: ko.observable().extend({ required: { message: "Please enter a name for the product." } }),
+                    price: ko.observable().extend({ required: { message: "Please enter a price for the product." } }),
+                    product : ko.observable(),
+                    products : ko.observableArray(),
 
-                self.Product = ko.observable();
-                self.Products = ko.observableArray();
-                
-                $.getJSON("/api/products", function (data) {
-                    self.Products(data);
-                }).fail(function (err) {
-                    console.error("Error " + err.status);
-                });
+                    //Load Product data to table
+                loadProducts: function () {
+                    ProductModel.products.removeAll();
+                    $.getJSON("/api/products", function (data) {
+                        $.each(data, function (key, value) {//jQuery loop
+                            ProductModel.products.push(new Product(value));
+                        });
+                    });
+                },
 
                 //Create Product
-                self.create = function () {
+                create : function () {
                     var created = ko.toJSON(this);
                     $.ajax({
                         url: 'api/products',
@@ -75,14 +83,20 @@
                         data: created,
                         success: function (data) {
                             location.reload(true);
+                        },
+                        error: function (xhr) {
+                            alert(xhr.responseText);
                         }
                     });
-                };
+                },
 
                 //Delete Product
-                self.picked = ko.observable();
-                self.delete = function () {
-                    var id = self.picked().id;
+                deleteProduct: ko.observable(),
+                deleteBtn: function (customer) {
+                    ProductModel.deleteProduct(product);
+                },
+                deleteProd : function () {
+                    var id = ko.toJS(ProductModel.deleteProduct()).id;
                     $.ajax({
                         url: 'api/products' + id,
                         cache: false,
@@ -91,29 +105,39 @@
                         data: id,
                         success: function (data) {
                             location.reload(true);
+                        },
+                        error: function (xhr) {
+                            alert(xhr.responseText);
                         }
                     });
-                };
+                },
 
                 //Update Product
-                self.update = function () {
-                    var updated = self.Product();
+                productBtn: function (customer) {
+                    ProductModel.updateProduct(product);
+                },
+                changeProduct: function () {
+                    var updatedProduct = ko.toJS(ProductModel.updateProduct);
                     $.ajax({
-                        url: 'api/products' + updated.id,
+                        url: 'api/customers' + updatedProduct.id,
                         cache: false,
                         type: 'PUT',
                         contentType: 'application/json; charset=utf-8',
-                        data: ko.toJSON(updated),
-                        success: function (data) {
+                        data: ko.toJSON(Product),
+                        success: function () {
                             location.reload(true);
+                        },
+                        error: function (xhr) {
+                            alert(xhr.responseText);
                         }
                     });
-                };
+                },
 
             }
-
-            var ProductModel = new ProductModel();
+            //Validate all properties of ProductModel and its 'child' properties
+            ProductModel.errors = ko.validation.group(ProductModel, { deep: true });
             ko.applyBindings(ProductModel);
+            ProductModel.loadProducts();
         });
 
 

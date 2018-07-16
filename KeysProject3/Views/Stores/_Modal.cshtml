@@ -17,11 +17,11 @@
                     <form id="storeForm">
                         <div class="form-group">
                             <label for="storeName">Name</label>
-                            <input data-bind="value: name, valueUpdate: 'afterkeydown'" type="text" class="form-control" id="storeName" placeholder="Please Enter Store Name">
+                            <input data-bind="value: $data.name, valueUpdate: 'afterkeydown'" type="text" class="form-control" id="storeName" placeholder="Please Enter Store Name">
                         </div>
                         <div class="form-group">
                             <label for="storeAddress">Address</label>
-                            <input data-bind="value:address, valueUpdate: 'afterkeydown'"type="text" class="form-control" id="storeAddress" placeholder="Please Enter Store Address">
+                            <input data-bind="value: $data.address, valueUpdate: 'afterkeydown'"type="text" class="form-control" id="storeAddress" placeholder="Please Enter Store Address">
                         </div>
                     </form>
                 </div>
@@ -48,7 +48,7 @@
                     <form id="editStoreForm">
                         <div class="form-group">
                             <label for="StoreName">Name</label>
-                            <input data-bind="$data.value: name, valueUpdate: 'afterkeydown'" type="text" class="form-control" id="StoreName">
+                            <input data-bind="value: $data.name, valueUpdate: 'afterkeydown'" type="text" class="form-control" id="StoreName">
                         </div>
                         <div class="form-group">
                             <label for="StoreAddress">Address</label>

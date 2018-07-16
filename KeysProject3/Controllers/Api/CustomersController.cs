@@ -66,14 +66,14 @@ namespace KeysProject3.Controllers.Api
 
             if (customerInDb == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
-            customerInDb.Id = customer.Id;
+
             customerInDb.Name = customer.Name;
             customerInDb.Address = customer.Address;
 
             db.SaveChanges();
         }
 
-        //DELETE /api/customer/id
+        //DELETE /api/customers/id
         [HttpDelete]
         public void DeleteCustomer(int id)
         {

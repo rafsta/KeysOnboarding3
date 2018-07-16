@@ -44,19 +44,27 @@
     @*Delete Customer Modal*@
     <div class="modal fade" id="deleteCustomerModal" tabindex="-1" role="dialog" aria-labelledby="deleteCustomerModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
+            <div class="modal-content" >
                 <div class="modal-header">
                     <h5 class="modal-title" id="DeleteCustomerModalLabel">Delete Customer</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    Do you want to delete this customer?
+                <div class="modal-body" data-bind="with:deleteCustomer">
+                    <p>Do you want to delete this customer?</p>
+                    <ul>
+                        <li>
+                            <strong>Name: <span data-bind="text:$data.name"></span></strong>
+                        </li>
+                        <li>
+                            <strong>Address: <span data-bind="text:$data.address"></span></strong>
+                        </li>
+                    </ul>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-success" data-dismiss="modal">No</button>
-                    <button data-bind="click:delete" type="button" class="btn btn-danger" id="deleteCustomerSubmit">Yes</button>
+                    <button data-bind="click:deleteCust" class="btn btn-danger" id="deleteCustomerSubmit">Yes</button>
                 </div>
             </div>
         </div>
@@ -74,20 +82,20 @@
                 </div>
                 <div class="modal-body">
                     <h4>Customer Details</h4>
-                    <form id="editCustomerForm">
+                    <form id="editCustomerForm" data-bind="updateCustomer">
                         <div class="form-group">
                             <label for="customerName">Name</label>
-                            <input data-bind="value: name, valueUpdate: 'afterkeydown'" type="text" class="form-control" id="customerName">
+                            <input data-bind="value:name, valueUpdate: 'afterkeydown'" type="text" class="form-control" id="customerName">
                         </div>
                         <div class="form-group">
                             <label for="customerAddress">Address</label>
-                            <input data-bind="value: address, valueUpdate: 'afterkeydown'" type="text" class="form-control" id="customerAddress">
+                            <input data-bind="value:address, valueUpdate: 'afterkeydown'" type="text" class="form-control" id="customerAddress">
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button data-bind="update" type="button" class="btn btn-primary" id="editCustomerSubmit">Save</button>
+                    <button data-bind="click:changeCustomer" type="button" class="btn btn-primary" id="editCustomerSubmit">Save</button>
                 </div>
             </div>
         </div>
