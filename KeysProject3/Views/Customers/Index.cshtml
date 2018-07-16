@@ -93,8 +93,10 @@
                     });
                 },
 
-                //Delete Customer
+                //Chosen option for update/delete modal
                 chosenCustomer: ko.observable(),
+
+                //Delete Customer
                 deleteBtn: function (customer) {
                     CustomerModel.chosenCustomer(customer);
                 },

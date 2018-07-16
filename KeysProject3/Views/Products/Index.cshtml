@@ -17,18 +17,18 @@
             <th>Action(Delete)</th>
         </tr>
     </thead>
-    <tbody id="BodyTag" data-bind="foreach: Products">
+    <tbody id="BodyTag" data-bind="foreach: products">
         <tr>
             <td style="display:none" id="IdTag" data-bind="text: id"></td>
             <td id="NameTag" data-bind="text: name"></td>
             <td id="PriceTag" data-bind="text: price"></td>
             <td>
-                <button class="btn btn-warning" data-target="#editProductModal" data-toggle="modal" type="button">
+                <button data-bind="$parent.updateBtn" class="btn btn-warning" data-target="#editProductModal" data-toggle="modal" type="button">
                     Edit
                 </button>
             </td>
             <td>
-                <button class="btn btn-danger" data-target="#deleteProductModal" data-toggle="modal" type="button">
+                <button data-bind="$parent.deleteBtn" class="btn btn-danger" data-target="#deleteProductModal" data-toggle="modal" type="button">
                     Delete
                 </button>
             </td>
@@ -49,7 +49,7 @@
 
             //Model
             function Product(data) {
-                //Two way binding for customer elements
+                //Two way binding for product elements
                 this.id = ko.observable(data.id);
                 this.name = ko.observable(data.name).extend({ required: "Please enter a name for the product." });
                 this.price = ko.observable(data.price).extend({ required: "Please enter a price for the product." });
@@ -91,9 +91,11 @@
                     });
                 },
 
+                //Chosen option for update/delete modal
+                chosenProduct: ko.observable(),
+
                 //Delete Product
-                deleteProduct: ko.observable(),
-                deleteBtn: function (customer) {
+                deleteBtn: function (product) {
                     ProductModel.deleteProduct(product);
                 },
                 deleteProd : function () {
@@ -114,13 +116,13 @@
                 },
 
                 //Update Product
-                productBtn: function (customer) {
-                    ProductModel.updateProduct(product);
+                updateBtn: function (product) {
+                    ProductModel.chosenProduct(product);
                 },
                 changeProduct: function () {
-                    var updatedProduct = ko.toJS(ProductModel.updateProduct);
+                    var updatedProduct = ko.toJS(ProductModel.chosenProduct);
                     $.ajax({
-                        url: 'api/customers' + updatedProduct.id,
+                        url: 'api/products' + updatedProduct.id,
                         cache: false,
                         type: 'PUT',
                         contentType: 'application/json; charset=utf-8',
