@@ -41,88 +41,104 @@
     <script>
         //Load table data
         $(function () {
-            function StoreModel(id, name, address) {
-                var self = this;
+            //Customise default validation configuration
+            ko.validation.init({
+                messagesOnModified: true, //Validation activated by triggers
+                parseInputAttributes: true //Validation by HTML5 validation attributes
+            });
 
-                //Two way binding for customer elements
-                self.id = ko.observable(id);
-                self.name = ko.observable(name).extend({ required: "Please enter a name for the store." });
-                self.address = ko.observable(address).extend({ required: "Please enter an address for the store." });
-
-                var Store = {
-                    id: self.id,
-                    name: self.name,
-                    address: self.address
-                };
-
-                self.Store = ko.observable();
-                self.Stores = ko.observableArray();
-
-                $.getJSON("/api/stores", function (data) {
-                    self.Stores(data);
-                }).fail(function (err) {
-                    console.error("Error " + err.status);
-                });
-
-                //Create Store
-                self.create = function () {
-                    var data = created;
-                    $.ajax({
-                        url: 'api/stores',
-                        cache: false,
-                        type: 'POST',
-                        contentType: 'application/json; charset=utf-8',
-                        data: ko.toJSON(Store),
-                        success: function (data) {
-                            location.reload(true);
-                        }.fail(function (err) {
-                            console.error("Error " + err.status);
-                        })
-                    });
-                };
-
-                //Delete Store
-                self.DELETE = ko.observable();
-                self.delete = function () {
-                    var id = self.DELETE().id;
-                    $.ajax({
-                        url: 'api/stores' + id,
-                        cache: false,
-                        type: 'POST',
-                        contentType: 'application/json; charset=utf-8',
-                        data: Id,
-                        success: function (data) {
-                            location.reload(true);
-                        }.fail(function (err) {
-                            console.error("Error " + err.status);
-                        })
-                    });
-                };
-
-                //Update Store
-                self.editBtn = function (Store) {
-                    self.Store(Store);
-                }
-                self.UPDATE = ko.observable();
-                self.update = function () {
-                    var id = self.UPDATE().id;
-                    $.ajax({
-                        url: 'api/stores' + UPDATE.id,
-                        cache: false,
-                        type: 'PUT',
-                        contentType: 'application/json; charset=utf-8',
-                        data: ko.toJSON(Store),
-                        success: function (data) {
-                            location.reload(true);
-                        }.fail(function (err) {
-                            console.error("Error " + err.status);
-                        })
-                    });
-                };
+            //Model
+            function Store(data) {
+                this.id = ko.observable(data.id);
+                this.name = ko.observable(data.name).extend({ required: { message: 'Please enter a name for the store.' } });
+                this.address = ko.observable(data.address).extend({ required: { message: 'Please enter an address for the store.' } });
             }
-            var StoreViewModel = new StoreModel();
-            ko.applyBindings(StoreViewModel);
-        });
+
+            //Viewmodel
+            function StoreModel(id, name, address) {
+                var Store = {
+                    id: ko.observable(),
+                    name: ko.observable().extend({ required: { message: "Please enter a name for the store." } }),
+                    address: ko.observable().extend({ required: { message: "Please enter an address for the store." } }),
+                    Store = ko.observable(),
+                    Stores = ko.observableArray(),
+
+                    //Load Customer data to table
+                    loadStores: function () {
+                        StoreModel.stores.removeAll();
+                        $.getJSON("api/stores", function (data) {
+                            $.each(data, function (key, value) {//jQuery loop
+                                StoreModel.stores.push(new Store(value));
+                            });
+                        });
+                    },
+
+                    //Create Store
+                    createStore: function () {
+                        var data = created;
+                        $.ajax({
+                            url: 'api/stores',
+                            cache: false,
+                            type: 'POST',
+                            contentType: 'application/json; charset=utf-8',
+                            data: ko.toJSON(Store),
+                            success: function (data) {
+                                location.reload(true);
+                            },
+                            error: function (xhr) {
+                                alert(xhr.responseText);
+                            }
+                        });
+                    },
+
+                    //Delete Store
+                    chosenStore: ko.observable(),
+                    deleteBtn: function (store) {
+                        StoreModel.chosenStore(store);
+                    },
+                    deleteStor: function (store) {
+                        var id = ko.toJS(StoreModel.chosenStore()).id;
+                        $.ajax({
+                            url: 'api/stores' + id,
+                            cache: false,
+                            type: 'POST',
+                            contentType: 'application/json; charset=utf-8',
+                            data: Id,
+                            success: function (data) {
+                                location.reload(true);
+                            },
+                            error: function (xhr) {
+                                alert(xhr.responseText);
+                            }
+                        });
+                    },
+
+                    //Update Store
+                    updateBtn: function (store) {
+                        StoreModel.chosenStore(store);
+                    },
+                    changeStore: function () {
+                        var updatedStore = ko.toJS(StoreModel.chosenStore);
+                        $.ajax({
+                            url: 'api/stores' + updatedStore.id,
+                            cache: false,
+                            type: 'PUT',
+                            contentType: 'application/json; charset=utf-8',
+                            data: ko.toJSON(Store),
+                            success: function () {
+                                location.reload(true);
+                            },
+                            error: function (xhr) {
+                                alert(xhr.responseText);
+                            }
+                        });
+                    },
+                }
+                //Validate all properties of StoreModel and its 'child' properties
+                StoreModel.errors = ko.validation.group(StoreModel, { deep: true });
+                var StoreViewModel = new StoreModel();
+                ko.applyBindings(StoreViewModel);
+            });
 
 
     </script>}

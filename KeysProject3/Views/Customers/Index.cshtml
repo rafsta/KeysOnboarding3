@@ -43,24 +43,25 @@
     <script>
         //Load table data
         $(function () {
-
             //Customise default validation configuration
             ko.validation.init({
-                messagesOnModified:true, //Validation activated by triggers
+                messagesOnModified: true, //Validation activated by triggers
                 parseInputAttributes: true //Validation by HTML5 validation attributes
             });
-            
+
+            //Model
             function Customer(data) {
                 this.id = ko.observable(data.id);
                 this.name = ko.observable(data.name).extend({ required: { message: 'Please enter a name for the customer.' } });
                 this.address = ko.observable(data.address).extend({ required: { message: 'Please enter an address for the customer.' } });
             }
 
+            //Viewmodel
             var CustomerModel = {
                 //Two way binding for customer elements
                 id: ko.observable(),
-                name: ko.observable().extend({ required: { message: "Please enter a name for the customer." }}),
-                address: ko.observable().extend({ required: { message: "Please enter an address for the customer." }}),
+                name: ko.observable().extend({ required: { message: "Please enter a name for the customer." } }),
+                address: ko.observable().extend({ required: { message: "Please enter an address for the customer." } }),
                 customer: ko.observable(),
                 customers: ko.observableArray(),
 
@@ -73,9 +74,9 @@
                         });
                     });
                 },
-                
+
                 //Create Customer
-                create: function () {
+                createCustomer: function () {
                     var created = ko.toJSON(this);
                     $.ajax({
                         url: '/api/customers/',
@@ -86,19 +87,19 @@
                         success: function (data) {
                             location.reload(true);
                         },
-                            error: function (xhr) {
+                        error: function (xhr) {
                             alert(xhr.responseText);
                         }
                     });
                 },
 
                 //Delete Customer
-                deleteCustomer: ko.observable(),
+                chosenCustomer: ko.observable(),
                 deleteBtn: function (customer) {
-                    CustomerModel.deleteCustomer(customer);
+                    CustomerModel.chosenCustomer(customer);
                 },
-                deleteCust : function (customer) {
-                    var id = ko.toJS(CustomerModel.deleteCustomer()).id;
+                deleteCust: function (customer) {
+                    var id = ko.toJS(CustomerModel.chosenCustomer()).id;
                     $.ajax({
                         url: "/api/customers/" + id,
                         cache: false,
@@ -106,8 +107,8 @@
                         contentType: 'application/json; charset=utf-8',
                         success: function () {
                             location.reload(true);
-                        },                        
-                            error: function (xhr) {
+                        },
+                        error: function (xhr) {
                             alert(xhr.responseText);
                         }
                     });
@@ -115,10 +116,10 @@
 
                 //Update Customer
                 updateBtn: function (customer) {
-                    CustomerModel.updateCustomer(customer);
+                    CustomerModel.chosenCustomer(customer);
                 },
                 changeCustomer: function () {
-                    var updatedCustomer = ko.toJS(CustomerModel.updateCustomer);
+                    var updatedCustomer = ko.toJS(CustomerModel.chosenCustomer);
                     $.ajax({
                         url: 'api/customers' + updatedCustomer.id,
                         cache: false,

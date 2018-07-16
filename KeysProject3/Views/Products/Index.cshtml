@@ -41,13 +41,13 @@
     <script>
         //Load table data
         $(function () {
-
             //Customise default validation configuration
             ko.validation.init({
                 messagesOnModified: true, //Validation activated by triggers
                 parseInputAttributes: true //Validation by HTML5 validation attributes
             });
 
+            //Model
             function Product(data) {
                 //Two way binding for customer elements
                 this.id = ko.observable(data.id);
@@ -55,6 +55,7 @@
                 this.price = ko.observable(data.price).extend({ required: "Please enter a price for the product." });
             }
 
+            //Viewmodel
             var ProductModel = {
                     id: ko.observable(),
                     name: ko.observable().extend({ required: { message: "Please enter a name for the product." } }),
@@ -73,7 +74,7 @@
                 },
 
                 //Create Product
-                create : function () {
+                createProduct : function () {
                     var created = ko.toJSON(this);
                     $.ajax({
                         url: 'api/products',
