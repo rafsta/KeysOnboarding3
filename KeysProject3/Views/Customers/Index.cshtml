@@ -23,12 +23,12 @@
             <td id="NameTag" data-bind="text: name"></td>
             <td id="AddressTag" data-bind="text: address"></td>
             <td>
-                <button data-bind="$parent.updateBtn" class="btn btn-warning" data-target="#editCustomerModal" data-toggle="modal" type="button">
+                <button data-bind="click:$parent.updateBtn" class="btn btn-warning" data-target="#editCustomerModal" data-toggle="modal" type="button">
                     Edit
                 </button>
             </td>
             <td>
-                <button data-bind="$parent.deleteBtn" class="btn btn-danger" data-target="#deleteCustomerModal" data-toggle="modal" type="button">
+                <button data-bind="click:$parent.deleteBtn" class="btn btn-danger" data-target="#deleteCustomerModal" data-toggle="modal" type="button">
                     Delete
                 </button>
             </td>
@@ -79,7 +79,7 @@
                 createCustomer: function () {
                     var created = ko.toJSON(this);
                     $.ajax({
-                        url: '/api/customers/',
+                        url: '/api/customers',
                         cache: false,
                         type: 'POST',
                         contentType: 'application/json; charset=utf-8',
@@ -100,7 +100,7 @@
                 deleteBtn: function (customer) {
                     CustomerModel.chosenCustomer(customer);
                 },
-                deleteCust: function (customer) {
+                deleteCustomer: function () {
                     var id = ko.toJS(CustomerModel.chosenCustomer()).id;
                     $.ajax({
                         url: "/api/customers/" + id,
@@ -123,11 +123,11 @@
                 changeCustomer: function () {
                     var updatedCustomer = ko.toJS(CustomerModel.chosenCustomer);
                     $.ajax({
-                        url: 'api/customers' + updatedCustomer.id,
+                        url: '/api/customers/' + updatedCustomer.id,
                         cache: false,
                         type: 'PUT',
                         contentType: 'application/json; charset=utf-8',
-                        data: ko.toJSON(Customer),
+                        data: ko.toJSON(updatedCustomer),
                         success: function () {
                             location.reload(true);
                         },

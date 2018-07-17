@@ -74,7 +74,7 @@ namespace KeysProject3.Controllers.Api
         }
 
 
-        // DELETE: api/Products/5
+        // DELETE: api/Products/id
         [HttpDelete]
         [ResponseType(typeof(Product))]
         public void DeleteProduct(int id)

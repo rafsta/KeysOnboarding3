@@ -11,6 +11,7 @@
 <table data-bind="ProductSoldModel" class="table table-light table-hover" id="ProductSoldsTable">
     <thead>
         <tr>
+            <th style="display:none">Id</th>
             <th>Customer Name</th>
             <th>Product Name</th>
             <th>Store Name</th>
@@ -19,20 +20,20 @@
             <th>Action(Delete)</th>
         </tr>
     </thead>
-    <tbody id="BodyTag" data-bind="foreach: productsolds">
+    <tbody id="BodyTag" data-bind="foreach: productSolds">
         <tr>
-            <td style="display:none" id="IdTag" data-bind="text: Id"></td>
-            <td id="CustomerNameTag" data-bind="text: customerId"></td>
-            <td id="ProductNameTag" data-bind="text: productId"></td>
-            <td id="StoreNameTag" data-bind="text: storeId"></td>
+            <td style="display:none" id="IdTag" data-bind="text: id"></td>
+            <td id="CustomerNameTag" data-bind="text: customer.name"></td>
+            <td id="ProductNameTag" data-bind="text: product.name"></td>
+            <td id="StoreNameTag" data-bind="text: store.name"></td>
             <td id="DateSold" data-bind="text: moment(dateSold).format('DD/MM/YYYY')"></td>
             <td>
-                <button data-bind="editBtn" class="btn btn-warning" data-target="#editProductSoldModal" data-toggle="modal" type="button">
+                <button data-bind="click:$parent.editBtn" class="btn btn-warning" data-target="#editProductSoldModal" data-toggle="modal" type="button">
                     Edit
                 </button>
             </td>
             <td>
-                <button data-bind="deleteBtn" class="btn btn-danger" data-target="#deleteProductSoldModal" data-toggle="modal" type="button">
+                <button data-bind="click:$parent.deleteBtn" class="btn btn-danger" data-target="#deleteProductSoldModal" data-toggle="modal" type="button">
                     Delete
                 </button>
             </td>
@@ -45,147 +46,162 @@
     <script>
         //Load table data
         $(function () {
-            function ProductSoldModel() {
-                var self = this;
+            //Customise default validation configuration
+            ko.validation.init({
+                messagesOnModified: true, //Validation activated by triggers
+                parseInputAttributes: true //Validation by HTML5 validation attributes
+            });
+
+            //Model
+            function ProductSold(data) {
 
                 //Two way binding for Product Sold elements
-                self.id = ko.observable(data.id);
-                self.customerId = ko.observable(data.customerId);
-                self.productId = ko.observable(data.productId);
-                self.storeId = ko.observable(data.storeId);
-                self.dateSold = ko.observable(data.dateSold).extend({ required: { message: 'Date Sold is invalid.' } });
-                self.customer = ko.observable(data.customer);
-                self.product = ko.observable(data.product);
-                self.store = ko.observable(data.store);
+                this.id = ko.observable(data.id);
+                this.customerId = ko.observable(data.customerId);
+                this.productId = ko.observable(data.productId);
+                this.storeId = ko.observable(data.storeId);
+                this.dateSold = ko.observable(data.dateSold).extend({ required: { message: 'Please enter a date for the product sold.' } });
+                this.customer = ko.observable(data.customer);
+                this.product = ko.observable(data.product);
+                this.store = ko.observable(data.store);
+            }
 
-                var ProductSold = {
-                    Id: self.Id,
-                    customerId: self.customerId,
-                    productId: self.productId,
-                    storeId: self.storeId,
-                    dateSold: self.dateSold,
-                    customer: self.customer,
-                    product: self.product,
-                    store: self.store
-                };
+            //Viewmodel
+            var ProductSoldModel = {
+                id: ko.observable(),
+                customerId: ko.observable().extend({ required: { message: 'Please choose a customer for the product sold.' } }),
+                productId: ko.observable().extend({ required: { message: 'Please choose a product for the product sold.' } }),
+                storeId: ko.observable().extend({ required: { message: 'Please choose a store for the product sold.' } }),
+                dateSold: ko.observable().extend({ required: { message: 'Please enter a date for the product sold.' } }),
+                customer: ko.observable(),
+                product: ko.observable(),
+                store: ko.observable(),
+                productSold: ko.observable(),
+                productSolds: ko.observableArray(),
+                customerList: ko.observableArray(),
+                storeList: ko.observableArray(),
+                productList: ko.observableArray(),
 
-                self.productSold = ko.observable();
-                self.productSolds = ko.observableArray();
-
-                self.Message = ko.observable();
-
-                self.customerList = ko.observableArray();
-                self.storeList = ko.observableArray();
-                self.productList = ko.observableArray();
 
                 // Load data from all tables
-                loadTables();
-                function loadTables() {
+                loadProductSolds: function () {
+                    ProductSoldModel.productSolds.removeAll();
                     $.getJSON("/api/productsolds", function (data) {
-                        self.productSolds(data);
-                    }).fail(function (err) {
-                        self.Message("Error " + err.status);
+                        $.each(data, function (key, value) {
+                            ProductSoldModel.productSolds.push(ko.toJS(new ProductSold(value)));
+                        });
                     });
-
                     $.getJSON("/api/customers", function (data) {
-                        self.customerList(data);
-                    }).fail(function (err) {
-                        console.error("Error " + err.status);
+                        ProductSoldModel.customerList(data);
                     });
-
                     $.getJSON("/api/products", function (data) {
-                        self.productList(data);
-                    }).fail(function (err) {
-                        console.error("Error " + err.status);
+                        ProductSoldModel.productList(data);
                     });
-
                     $.getJSON("/api/stores", function (data) {
-                        self.storeList(data);
-                    }).fail(function (err) {
-                        console.error("Error " + err.status);
+                        ProductSoldModel.storeList(data);
                     });
-                }
+                },
 
                 //Create Product Sold
-                self.create = function () {
-                    var NewProductSold = ko.toJSON(this);
+                createProductSold : function () {
                     $.ajax({
                         url: 'api/productsolds',
                         cache: false,
                         type: 'POST',
                         contentType: 'application/json; charset=utf-8',
-                        data: ko.toJSON(ProductSold),
-                        success: function (data) {
-                            self.ProductSold.push(data);
-                            self.Id(null);
-                            self.customerId("");
-                            self.productId("");
-                            self.storeId("");
-                            self.datesold("");
-                            location.reload(true);
-                        }
-                    }).fail(function (err) {
-                        console.error("Error " + err.status);
-                    });
-                };
-            
-
-                self.getPS = function () {
-                    self.productsolds.removeAll();
-                    $.getJSON("api/productsolds", function (data) {
-                        self.productsolds(data);
-                    }).fail(function (err) {
-                        console.error("Error " + err.status);
-                    });
-                };
-
-                self.pickedPS = ko.observable();
-                self.productsolds = ko.observableArray();
-                self.deleteBtn = function (productsold) {
-                    self.pickedPS(productsold);
-                }
-
-                
-                //Delete Product Sold
-                self.delete = function () {
-                    var id = self.pickedPS().id;
-                    $.ajax({
-                        url: 'api/productsolds' + id,
-                        cache: false,
-                        type: 'DELETE',
-                        contentType: 'application/json; charset=utf-8',
-                        data: id,
-                        success: function (data) {
-                            location.reload(true);
-                        }
-                    }).fail(function (err) {
-                        console.error("Error " + err.status);
-                    });
-                };
-                    
-                //Update Product Sold
-                self.update = function () {
-                    var UPDATE = self.ProductSold();
-                    $.ajax({
-                        url: 'api/productsolds' + self.ProductSold().id,
-                        cache: false,
-                        type: 'PUT',
-                        contentType: 'application/json; charset=utf-8',
-                        data: ko.toJSON(ProductSold),
+                        data: ko.toJSON(this),
                         success: function (data) {
                             location.reload(true);
                         },
                         error: function (xhr) {
                             alert(xhr.responseText);
                         }
-                    }).fail(function (err) {
-                        console.error("Error " + err.status);
                     });
-                };
+                },
 
+
+                //Chosen option for update/delete modal
+                chosenProductSold: ko.observable(),
+                
+                //Delete Product Sold
+                deleteBtn: function (productSold) {
+                    ProductSoldModel.chosenProductSold(productSold);
+                },
+                deleteProductSold : function () {
+                    var id = ko.toJS(ProductSoldModel.chosenProductSold()).id;
+                    $.ajax({
+                        url: 'api/productsolds/' + id,
+                        cache: false,
+                        type: 'DELETE',
+                        contentType: 'application/json; charset=utf-8',
+                        data: id,
+                        success: function (data) {
+                            location.reload(true);
+                        },
+                        error: function (xhr) {
+                            alert(xhr.responseText);
+                        }
+                    });
+                },
+
+                //Update Product Sold
+                editBtn: function (ProductSold) {
+                    ProductSoldModel.chosenProductSold(new ProductSold(productSold));
+                    ProductSoldModel.customerId.rules.remove(function (x) { return x.rule === "required" });
+                    ProductSoldModel.productId.rules.remove(function (x) { return x.rule === "required" });
+                    ProductSoldModel.storeId.rules.remove(function (x) { return x.rule === "required" });
+                    ProductSoldModel.dateSold.rules.remove(function (x) { return x.rule === "required" });
+                    ProductSoldModel.customerList.removeAll();
+                    ProductSoldModel.productList.removeAll();
+                    ProductSoldModel.storeList.removeAll();
+                    //Check for new items to push
+                    ProductSoldModel.customerList.push(ko.toJS(ProductSoldModel.chosenProductSold()).customer);
+                    $.getJSON("/api/customers", function (data) {
+                        $.each(data, function (key, customer) {
+                            if (customer.id !== ProductSoldModel.chosenProductSold().customerId) {
+                                ProductSoldModel.customerList.push(customer);
+                            }
+                        });
+                    });
+                    ProductSoldModel.productList.push(ko.toJS(ProductSoldModel.chosenProductSold()).product);
+                    $.getJSON("/api/products", function (data) {
+                        $.each(data, function (key, product) {
+                            if (product.id !== ProductSoldModel.chosenProductSold().productId) {
+                                ProductSoldModel.productList.push(product);
+                            }
+                        });
+                    });
+                    ProductSoldModel.storeList.push(ko.toJS(ProductSoldModel.chosenProductSold()).store);
+                    $.getJSON("/api/stores", function (data) {
+                        $.each(data, function (key, store) {
+                            if (store.id !== ProductSoldModel.chosenProductSold().storeId) {
+                                ProductSoldModel.storeList.push(store);
+                            }
+                        });
+                    });
+                },
+
+                changeProductSold: function () {
+                    var updatedProductSold = ko.toJS(ProductSoldModel.chosenProductSold);
+                    $.ajax({
+                        url: "/api/productsolds/" + updatedProductSold.id,
+                        cache: false,
+                        type: 'PUT',
+                        data: ko.toJSON(ProductSoldModel.chosenProductSold),
+                        contentType: "application/json",
+                        processData: true,
+                        success: function () {
+                            location.reload(true);
+                        },
+                        error: function (xhr) {
+                            alert(xhr.responseText);
+                        }
+                    });
+                }
             }
-            var ProductSoldModel = new ProductSoldModel();
+            //Validate all properties of StoreModel and its 'child' properties
+            ProductSoldModel.errors = ko.validation.group(ProductSoldModel, { deep: true });
             ko.applyBindings(ProductSoldModel);
+            ProductSoldModel.loadProductSolds();
         });
-    </script>
-}
+    </script>}

@@ -18,18 +18,18 @@
                     <form id="productSoldForm">
                         <div class="form-group">
                             <label for="productSoldCustomerList">Customer Name</label>
-                            <select data-bind="options:customerList(), optionsText: 'name',optionsValue: 'id',
-                                    value: customerId, valueUpdate: 'afterkeydown'" id="productSoldCustomerList" class="custom-select" required></select>
+                            <select data-bind="options:customerList, optonsCaption:'Select a customer', optionsText: 'name',optionsValue: 'id',
+                                    value: customerId, valueUpdate: 'afterkeydown'" id="productSoldCustomerList" class="custom-select"></select>
                         </div>
                         <div class="form-group">
                             <label for="productSoldProductList">Product Name</label>
-                            <select data-bind="options:productList(), optionsText: 'name',optionsValue: 'id',
-                                    value: productId, valueUpdate: 'afterkeydown'" id="productSoldProductList" class="custom-select" required></select>
+                            <select data-bind="options:productList, optonsCaption:'Select a product' optionsText: 'name',optionsValue: 'id',
+                                    value: productId, valueUpdate: 'afterkeydown'" id="productSoldProductList" class="custom-select"></select>
                         </div>
                         <div class="form-group">
                             <label for="productSoldStoreList">Store Name</label>
-                            <select data-bind="options:storeList(), optionsText: 'name',optionsValue: 'id',
-                                    value: storeId, valueUpdate: 'afterkeydown'" id="productSoldStoreList" class="custom-select" required></select>
+                            <select data-bind="options:storeList, optonsCaption:'Select a store' optionsText: 'name',optionsValue: 'id',
+                                    value: storeId, valueUpdate: 'afterkeydown'" id="productSoldStoreList" class="custom-select"></select>
                         </div>
                         <div class="form-group">
                             <label for="productDateSold">Date Sold</label>
@@ -39,7 +39,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button data-bind="click:create" type="button" class="btn btn-primary" id="productSoldSubmit">Save</button>
+                    <button data-bind="click:createProductSold" type="button" class="btn btn-primary" id="productSoldSubmit">Save</button>
                 </div>
             </div>
         </div>
@@ -57,18 +57,18 @@
                 </div>
                 <div class="modal-body">
                     <h4>Product Sold Details</h4>
-                    <form id="editProductSoldForm">
+                    <form id="editProductSoldForm" data-bind="with:chosenProductSold">
                         <div class="form-group">
                             <label for="editProductSoldCustomerList">Customer Name</label>
-                            <select data-bind="options: customer, valueUpdate: 'afterkeydown'" id="editProductSoldCustomerList" class="custom-select" required></select>
+                            <select data-bind="options: $parent.customerList, valueUpdate: 'afterkeydown'" id="editProductSoldCustomerList" class="custom-select" required></select>
                         </div>
                         <div class="form-group">
                             <label for="editProductSoldProductList">Product Name</label>
-                            <select data-bind="optons: product, valueUpdate: 'afterkeydown'" id="editProductSoldProductList" class="custom-select" required></select>
+                            <select data-bind="optons: $parent.productList, valueUpdate: 'afterkeydown'" id="editProductSoldProductList" class="custom-select" required></select>
                         </div>
                         <div class="form-group">
                             <label for="editProductSoldStoreList">Store Name</label>
-                            <select data-bind="options: store, valueUpdate: 'afterkeydown'" id="editProductSoldStoreList" class="custom-select" required></select>
+                            <select data-bind="options: $parent.storeList, valueUpdate: 'afterkeydown'" id="editProductSoldStoreList" class="custom-select" required></select>
                         </div>
                         <div class="form-group">
                             <label for="editProductSoldDate">Date Sold</label>
@@ -79,7 +79,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button data-bind="click: update" type="button" class="btn btn-primary" id="editProductSoldSubmit">Save</button>
+                    <button data-bind="click: changeProductSold" type="button" class="btn btn-primary" id="editProductSoldSubmit">Save</button>
                 </div>
             </div>
         </div>
@@ -95,7 +95,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body" data-bind="pickedPS">
+                <div class="modal-body" data-bind="chosenProductSold">
                     Do you want to delete this Product Sold?
                     <ul>
                         <li>
@@ -114,7 +114,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-success" data-dismiss="modal">No</button>
-                    <button data-bind="click: delete" type="button" class="btn btn-danger" id="deleteProductSoldSubmit">Yes</button>
+                    <button data-bind="click: deleteProductSold" type="button" class="btn btn-danger" id="deleteProductSoldSubmit">Yes</button>
                 </div>
             </div>
         </div>

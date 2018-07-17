@@ -23,12 +23,12 @@
             <td id="NameTag" data-bind="text: name"></td>
             <td id="AddressTag" data-bind="text: address"></td>
             <td>
-                <button data-bind="$parent.editBtn" class="btn btn-warning" data-target="#editStoreModal" data-toggle="modal" type="button">
+                <button data-bind="click:$parent.editBtn" class="btn btn-warning" data-target="#editStoreModal" data-toggle="modal" type="button">
                     Edit
                 </button>
             </td>
             <td>
-                <button data-bind="$parent.deleteBtn" class="btn btn-danger" data-target="#deleteStoreModal" data-toggle="modal" type="button">
+                <button data-bind="click:$parent.deleteBtn" class="btn btn-danger" data-target="#deleteStoreModal" data-toggle="modal" type="button">
                     Delete
                 </button>
             </td>
@@ -44,8 +44,11 @@
             //Customise default validation configuration
             ko.validation.init({
                 messagesOnModified: true, //Validation activated by triggers
-                parseInputAttributes: true //Validation by HTML5 validation attributes
-            });
+                parseInputAttributes: true, //Validation by HTML5 validation attributes
+                registerExtenders: true, //Use custom validation rules in extended observables
+                insertMessages: true, //Show validation messages under the binding object
+                messageTemplate:null
+            }, true);
 
             //Model
             function Store(data) {
@@ -62,7 +65,7 @@
                 store: ko.observable(),
                 stores: ko.observableArray(),
 
-                //Load Customer data to table
+                //Load Store data to table
                 loadStores: function () {
                     StoreModel.stores.removeAll();
                     $.getJSON("api/stores", function (data) {
@@ -74,13 +77,13 @@
 
                 //Create Store
                 createStore: function () {
-                    var data = created;
+                    var created = ko.toJSON(this);
                     $.ajax({
                         url: 'api/stores',
                         cache: false,
                         type: 'POST',
                         contentType: 'application/json; charset=utf-8',
-                        data: ko.toJSON(Store),
+                        data: created,
                         success: function (data) {
                             location.reload(true);
                         },
@@ -97,15 +100,14 @@
                 deleteBtn: function (store) {
                     StoreModel.chosenStore(store);
                 },
-                deleteStor: function (store) {
+                deleteStore: function (store) {
                     var id = ko.toJS(StoreModel.chosenStore()).id;
                     $.ajax({
-                        url: 'api/stores' + id,
+                        url: '/api/stores/' + id,
                         cache: false,
-                        type: 'POST',
+                        type: 'DELETE',
                         contentType: 'application/json; charset=utf-8',
-                        data: Id,
-                        success: function (data) {
+                        success: function () {
                             location.reload(true);
                         },
                         error: function (xhr) {
@@ -121,11 +123,11 @@
                 changeStore: function () {
                     var updatedStore = ko.toJS(StoreModel.chosenStore);
                     $.ajax({
-                        url: 'api/stores' + updatedStore.id,
+                        url: '/api/stores/' + updatedStore.id,
                         cache: false,
                         type: 'PUT',
                         contentType: 'application/json; charset=utf-8',
-                        data: ko.toJSON(Store),
+                        data: ko.toJSON(updatedStore),
                         success: function () {
                             location.reload(true);
                         },
