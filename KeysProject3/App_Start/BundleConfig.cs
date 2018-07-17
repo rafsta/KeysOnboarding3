@@ -14,7 +14,6 @@ namespace KeysProject3
                 "~/Scripts/knockout-3.4.2.js",
                 "~/Scripts/knockout.mapping-latest.js",
                 "~/Scripts/knockout.validation.js",
-                        "~/Scripts/knockout-3.4.2.debug.js",
                         "~/Scripts/moment.js"
                         ));
 

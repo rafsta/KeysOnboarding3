@@ -110,7 +110,7 @@
                         $.ajax({
                             url: '/api/products/' + id,
                             cache: false,
-                            type: 'POST',
+                            type: 'DELETE',
                             contentType: 'application/json; charset=utf-8',
                             success: function () {
                                 location.reload(true);
