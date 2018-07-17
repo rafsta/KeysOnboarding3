@@ -46,7 +46,10 @@
             //Customise default validation configuration
             ko.validation.init({
                 messagesOnModified: true, //Validation activated by triggers
-                parseInputAttributes: true //Validation by HTML5 validation attributes
+                parseInputAttributes: true, //Validation by HTML5 validation attributes
+                registerExtenders: true, //Use custom validation rules in extended observables
+                insertMessages: true, //Show validation messages under the binding object
+                messageTemplate: null
             });
 
             //Model
@@ -77,20 +80,24 @@
 
                 //Create Customer
                 createCustomer: function () {
-                    var created = ko.toJSON(this);
-                    $.ajax({
-                        url: '/api/customers',
-                        cache: false,
-                        type: 'POST',
-                        contentType: 'application/json; charset=utf-8',
-                        data: created,
-                        success: function (data) {
-                            location.reload(true);
-                        },
-                        error: function (xhr) {
-                            alert(xhr.responseText);
-                        }
-                    });
+                    if (CustomerModel.errors().length === 0) {//No validation conflicts before sending data
+                        var created = ko.toJSON(this);
+                        $.ajax({
+                            url: '/api/customers',
+                            cache: false,
+                            type: 'POST',
+                            contentType: 'application/json; charset=utf-8',
+                            data: created,
+                            success: function (data) {
+                                location.reload(true);
+                            },
+                            error: function (xhr) {
+                                alert(xhr.responseText);
+                            }
+                        });
+                    } else {
+                        CustomerModel.errors.showAllMessages();
+                    }
                 },
 
                 //Chosen option for update/delete modal
@@ -101,40 +108,47 @@
                     CustomerModel.chosenCustomer(customer);
                 },
                 deleteCustomer: function () {
-                    var id = ko.toJS(CustomerModel.chosenCustomer()).id;
-                    $.ajax({
-                        url: "/api/customers/" + id,
-                        cache: false,
-                        type: "POST",
-                        contentType: 'application/json; charset=utf-8',
-                        success: function () {
-                            location.reload(true);
-                        },
-                        error: function (xhr) {
-                            alert(xhr.responseText);
-                        }
-                    });
-                },
+                        var id = ko.toJS(CustomerModel.chosenCustomer()).id;
+                        $.ajax({
+                            url: "/api/customers/" + id,
+                            cache: false,
+                            type: "POST",
+                            contentType: 'application/json; charset=utf-8',
+                            success: function () {
+                                location.reload(true);
+                            },
+                            error: function (xhr) {
+                                alert(xhr.responseText);
+                            }
+                        });
+                    },
 
                 //Update Customer
                 updateBtn: function (customer) {
                     CustomerModel.chosenCustomer(customer);
+                    CustomerModel.name.rules.remove(function (x) { return x.rule === "required" });
+                    CustomerModel.address.rules.remove(function (x) { return x.rule === "required" });
                 },
                 changeCustomer: function () {
-                    var updatedCustomer = ko.toJS(CustomerModel.chosenCustomer);
-                    $.ajax({
-                        url: '/api/customers/' + updatedCustomer.id,
-                        cache: false,
-                        type: 'PUT',
-                        contentType: 'application/json; charset=utf-8',
-                        data: ko.toJSON(updatedCustomer),
-                        success: function () {
-                            location.reload(true);
-                        },
-                        error: function (xhr) {
-                            alert(xhr.responseText);
-                        }
-                    });
+                    if (CustomerModel.errors().length === 0) {//No validation conflicts before sending data
+                        var updatedCustomer = ko.toJS(CustomerModel.chosenCustomer);
+                        $.ajax({
+                            url: '/api/customers/' + updatedCustomer.id,
+                            cache: false,
+                            type: 'PUT',
+                            contentType: 'application/json; charset=utf-8',
+                            data: ko.toJSON(updatedCustomer),
+                            processData: true,
+                            success: function () {
+                                location.reload(true);
+                            },
+                            error: function (xhr) {
+                                alert(xhr.responseText);
+                            }
+                        });
+                    } else {
+                        CustomerModel.errors.showAllMessages();
+                    }
                 },
 
             }

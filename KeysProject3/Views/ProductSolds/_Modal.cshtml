@@ -19,17 +19,17 @@
                         <div class="form-group">
                             <label for="productSoldCustomerList">Customer Name</label>
                             <select data-bind="options:customerList, optonsCaption:'Select a customer', optionsText: 'name',optionsValue: 'id',
-                                    value: customerId, valueUpdate: 'afterkeydown'" id="productSoldCustomerList" class="custom-select"></select>
+                                    value: customerId, valueUpdate: 'afterkeydown'" id="productSoldCustomerList" class="form-control"></select>
                         </div>
                         <div class="form-group">
                             <label for="productSoldProductList">Product Name</label>
-                            <select data-bind="options:productList, optonsCaption:'Select a product' optionsText: 'name',optionsValue: 'id',
-                                    value: productId, valueUpdate: 'afterkeydown'" id="productSoldProductList" class="custom-select"></select>
+                            <select data-bind="options:productList, optonsCaption:'Select a product', optionsText: 'name',optionsValue: 'id',
+                                    value: productId, valueUpdate: 'afterkeydown'" id="productSoldProductList" class="form-control"></select>
                         </div>
                         <div class="form-group">
                             <label for="productSoldStoreList">Store Name</label>
-                            <select data-bind="options:storeList, optonsCaption:'Select a store' optionsText: 'name',optionsValue: 'id',
-                                    value: storeId, valueUpdate: 'afterkeydown'" id="productSoldStoreList" class="custom-select"></select>
+                            <select data-bind="options:storeList, optonsCaption:'Select a store', optionsText: 'name',optionsValue: 'id',
+                                    value: storeId, valueUpdate: 'afterkeydown'" id="productSoldStoreList" class="form-control"></select>
                         </div>
                         <div class="form-group">
                             <label for="productDateSold">Date Sold</label>
@@ -57,18 +57,18 @@
                 </div>
                 <div class="modal-body">
                     <h4>Product Sold Details</h4>
-                    <form id="editProductSoldForm" data-bind="with:chosenProductSold">
+                    <form id="editProductSoldForm" data-bind="with:chosenProductSold()">
                         <div class="form-group">
                             <label for="editProductSoldCustomerList">Customer Name</label>
-                            <select data-bind="options: $parent.customerList, valueUpdate: 'afterkeydown'" id="editProductSoldCustomerList" class="custom-select" required></select>
+                            <select data-bind="options: $parent.customerList,optionsText:'name',optionsValue:'id',value:customerId, valueUpdate: 'afterkeydown'" id="editProductSoldCustomerList" class="form-control"></select>
                         </div>
                         <div class="form-group">
                             <label for="editProductSoldProductList">Product Name</label>
-                            <select data-bind="optons: $parent.productList, valueUpdate: 'afterkeydown'" id="editProductSoldProductList" class="custom-select" required></select>
+                            <select data-bind="optons: $parent.productList,optionsText:'name',optionsValue:'id',value:productId, valueUpdate: 'afterkeydown'" id="editProductSoldProductList" class="form-control"></select>
                         </div>
                         <div class="form-group">
                             <label for="editProductSoldStoreList">Store Name</label>
-                            <select data-bind="options: $parent.storeList, valueUpdate: 'afterkeydown'" id="editProductSoldStoreList" class="custom-select" required></select>
+                            <select data-bind="options: $parent.storeList,optionsText:'name',optionsValue:'id',value:storeId, valueUpdate: 'afterkeydown'" id="editProductSoldStoreList" class="form-control"></select>
                         </div>
                         <div class="form-group">
                             <label for="editProductSoldDate">Date Sold</label>

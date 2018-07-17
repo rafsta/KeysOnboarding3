@@ -28,7 +28,7 @@
             <td id="StoreNameTag" data-bind="text: store.name"></td>
             <td id="DateSold" data-bind="text: moment(dateSold).format('DD/MM/YYYY')"></td>
             <td>
-                <button data-bind="click:$parent.editBtn" class="btn btn-warning" data-target="#editProductSoldModal" data-toggle="modal" type="button">
+                <button data-bind="click:$parent.updateBtn" class="btn btn-warning" data-target="#editProductSoldModal" data-toggle="modal" type="button">
                     Edit
                 </button>
             </td>
@@ -49,7 +49,10 @@
             //Customise default validation configuration
             ko.validation.init({
                 messagesOnModified: true, //Validation activated by triggers
-                parseInputAttributes: true //Validation by HTML5 validation attributes
+                parseInputAttributes: true, //Validation by HTML5 validation attributes
+                registerExtenders: true, //Use custom validation rules in extended observables
+                insertMessages: true, //Show validation messages under the binding object
+                messageTemplate: null
             });
 
             //Model
@@ -60,7 +63,7 @@
                 this.customerId = ko.observable(data.customerId);
                 this.productId = ko.observable(data.productId);
                 this.storeId = ko.observable(data.storeId);
-                this.dateSold = ko.observable(data.dateSold).extend({ required: { message: 'Please enter a date for the product sold.' } });
+                this.dateSold = ko.observable(data.dateSold).extend({ required: { minLength: 8,maxLength:10, message: 'Please enter a date for the product sold.' } });
                 this.customer = ko.observable(data.customer);
                 this.product = ko.observable(data.product);
                 this.store = ko.observable(data.store);
@@ -72,7 +75,7 @@
                 customerId: ko.observable().extend({ required: { message: 'Please choose a customer for the product sold.' } }),
                 productId: ko.observable().extend({ required: { message: 'Please choose a product for the product sold.' } }),
                 storeId: ko.observable().extend({ required: { message: 'Please choose a store for the product sold.' } }),
-                dateSold: ko.observable().extend({ required: { message: 'Please enter a date for the product sold.' } }),
+                dateSold: ko.observable().extend({ required: { minLength: 8, maxLength: 10, message: 'Please enter a date for the product sold.' } }),
                 customer: ko.observable(),
                 product: ko.observable(),
                 store: ko.observable(),
@@ -103,7 +106,8 @@
                 },
 
                 //Create Product Sold
-                createProductSold : function () {
+                createProductSold: function () {
+                    if (ProductSoldModel.errors().length === 0) {//No validation conflicts before sending data
                     $.ajax({
                         url: 'api/productsolds',
                         cache: false,
@@ -115,10 +119,12 @@
                         },
                         error: function (xhr) {
                             alert(xhr.responseText);
-                        }
-                    });
+                            }
+                        });
+                    } else {
+                        ProductSoldModel.errors.showAllMessages();
+                    }
                 },
-
 
                 //Chosen option for update/delete modal
                 chosenProductSold: ko.observable(),
@@ -135,7 +141,7 @@
                         type: 'DELETE',
                         contentType: 'application/json; charset=utf-8',
                         data: id,
-                        success: function (data) {
+                        success: function () {
                             location.reload(true);
                         },
                         error: function (xhr) {
@@ -145,7 +151,7 @@
                 },
 
                 //Update Product Sold
-                editBtn: function (ProductSold) {
+                updateBtn: function (productSold) {
                     ProductSoldModel.chosenProductSold(new ProductSold(productSold));
                     ProductSoldModel.customerId.rules.remove(function (x) { return x.rule === "required" });
                     ProductSoldModel.productId.rules.remove(function (x) { return x.rule === "required" });
@@ -181,7 +187,8 @@
                     });
                 },
 
-                changeProductSold: function () {
+                    changeProductSold: function () {
+                        if (ProductSoldModel.errors().length === 0) {//No validation conflicts before sending data
                     var updatedProductSold = ko.toJS(ProductSoldModel.chosenProductSold);
                     $.ajax({
                         url: "/api/productsolds/" + updatedProductSold.id,
@@ -195,11 +202,14 @@
                         },
                         error: function (xhr) {
                             alert(xhr.responseText);
-                        }
-                    });
-                }
+                            }
+                        });
+                    } else {
+                            ProductSoldModel.errors.showAllMessages();
+                    }
+                },
             }
-            //Validate all properties of StoreModel and its 'child' properties
+            //Validate all properties of ProductSoldModel and its 'child' properties
             ProductSoldModel.errors = ko.validation.group(ProductSoldModel, { deep: true });
             ko.applyBindings(ProductSoldModel);
             ProductSoldModel.loadProductSolds();

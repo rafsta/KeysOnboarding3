@@ -44,7 +44,10 @@
             //Customise default validation configuration
             ko.validation.init({
                 messagesOnModified: true, //Validation activated by triggers
-                parseInputAttributes: true //Validation by HTML5 validation attributes
+                parseInputAttributes: true, //Validation by HTML5 validation attributes
+                registerExtenders: true, //Use custom validation rules in extended observables
+                insertMessages: true, //Show validation messages under the binding object
+                messageTemplate: null
             });
 
             //Model
@@ -57,13 +60,13 @@
 
             //Viewmodel
             var ProductModel = {
-                    id: ko.observable(),
-                    name: ko.observable().extend({ required: { message: "Please enter a name for the product." } }),
-                    price: ko.observable().extend({ required: { message: "Please enter a price for the product." } }),
-                    product : ko.observable(),
-                    products : ko.observableArray(),
+                id: ko.observable(),
+                name: ko.observable().extend({ required: { message: "Please enter a name for the product." } }),
+                price: ko.observable().extend({ required: { message: "Please enter a price for the product." } }),
+                product: ko.observable(),
+                products: ko.observableArray(),
 
-                    //Load Product data to table
+                //Load Product data to table
                 loadProducts: function () {
                     ProductModel.products.removeAll();
                     $.getJSON("/api/products", function (data) {
@@ -74,21 +77,25 @@
                 },
 
                 //Create Product
-                createProduct : function () {
-                    var created = ko.toJSON(this);
-                    $.ajax({
-                        url: '/api/products',
-                        cache: false,
-                        type: 'POST',
-                        contentType: 'application/json; charset=utf-8',
-                        data: created,
-                        success: function (data) {
-                            location.reload(true);
-                        },
-                        error: function (xhr) {
-                            alert(xhr.responseText);
-                        }
-                    });
+                createProduct: function () {
+                    if (ProductModel.errors().length === 0) {//No validation conflicts before sending data
+                        var created = ko.toJSON(this);
+                        $.ajax({
+                            url: '/api/products',
+                            cache: false,
+                            type: 'POST',
+                            contentType: 'application/json; charset=utf-8',
+                            data: created,
+                            success: function (data) {
+                                location.reload(true);
+                            },
+                            error: function (xhr) {
+                                alert(xhr.responseText);
+                            }
+                        });
+                    } else {
+                        ProductModel.errors.showAllMessages();
+                    }
                 },
 
                 //Chosen option for update/delete modal
@@ -98,43 +105,49 @@
                 deleteBtn: function (product) {
                     ProductModel.chosenProduct(product);
                 },
-                deleteProduct : function () {
-                    var id = ko.toJS(ProductModel.chosenProduct()).id;
-                    $.ajax({
-                        url: '/api/products/' + id,
-                        cache: false,
-                        type: 'POST',
-                        contentType: 'application/json; charset=utf-8',
-                        success: function () {
-                            location.reload(true);
-                        },
-                        error: function (xhr) {
-                            alert(xhr.responseText);
-                        }
-                    });
-                },
+                deleteProduct: function () {
+                        var id = ko.toJS(ProductModel.chosenProduct()).id;
+                        $.ajax({
+                            url: '/api/products/' + id,
+                            cache: false,
+                            type: 'POST',
+                            contentType: 'application/json; charset=utf-8',
+                            success: function () {
+                                location.reload(true);
+                            },
+                            error: function (xhr) {
+                                alert(xhr.responseText);
+                            }
+                        });
+                    },
 
                 //Update Product
                 updateBtn: function (product) {
                     ProductModel.chosenProduct(product);
+                    ProductModel.name.rules.remove(function (x) { return x.rule === "required" });
+                    ProductModel.price.rules.remove(function (x) { return x.rule === "required" });
                 },
                 changeProduct: function () {
-                    var updatedProduct = ko.toJS(ProductModel.chosenProduct);
-                    $.ajax({
-                        url: '/api/products/' + updatedProduct.id,
-                        cache: false,
-                        type: 'PUT',
-                        contentType: 'application/json; charset=utf-8',
-                        data: ko.toJSON(updatedProduct),
-                        success: function () {
-                            location.reload(true);
-                        },
-                        error: function (xhr) {
-                            alert(xhr.responseText);
-                        }
-                    });
+                    if (ProductModel.errors().length === 0) {//No validation conflicts before sending data
+                        var updatedProduct = ko.toJS(ProductModel.chosenProduct);
+                        $.ajax({
+                            url: '/api/products/' + updatedProduct.id,
+                            cache: false,
+                            type: 'PUT',
+                            contentType: 'application/json; charset=utf-8',
+                            data: ko.toJSON(updatedProduct),
+                            processData: true,
+                            success: function () {
+                                location.reload(true);
+                            },
+                            error: function (xhr) {
+                                alert(xhr.responseText);
+                            }
+                        });
+                    } else {
+                        ProductModel.errors.showAllMessages();
+                    }
                 },
-
             }
             //Validate all properties of ProductModel and its 'child' properties
             ProductModel.errors = ko.validation.group(ProductModel, { deep: true });
