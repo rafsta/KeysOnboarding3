@@ -25,14 +25,10 @@
                         </div>
                         <div class="form-group">
                             <label for="customerAddress">Address</label>
-                            <input data-bind="value:address, valueUpdate: 'afterkeydown'"  type="text" class="form-control" id="CustomerAddress" placeholder="Please Enter Your Address">
+                            <input data-bind="value:address, valueUpdate: 'afterkeydown'" type="text" class="form-control" id="CustomerAddress" placeholder="Please Enter Your Address">
                         </div>
-                        <p>Name of customer: <strong data-bind="text: name"></strong></p>
-                        <p>Address of customer: <strong data-bind="text:address"></strong></p>
-</form>
+                    </form>
                 </div>
-
-
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button data-bind="click:createCustomer" value="Create" type="button" class="btn btn-primary" id="CustomerSubmit">Save</button>
@@ -44,7 +40,7 @@
     @*Delete Customer Modal*@
     <div class="modal fade" id="deleteCustomerModal" tabindex="-1" role="dialog" aria-labelledby="deleteCustomerModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <div class="modal-content" >
+            <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="DeleteCustomerModalLabel">Delete Customer</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -82,7 +78,7 @@
                 </div>
                 <div class="modal-body">
                     <h4>Customer Details</h4>
-                    <form id="editCustomerForm" data-bind="chosenCustomer">
+                    <form id="editCustomerForm" data-bind="with:chosenCustomer">
                         <div class="form-group">
                             <label for="customerName">Name</label>
                             <input data-bind="value:name, valueUpdate: 'afterkeydown'" type="text" class="form-control" id="customerName">

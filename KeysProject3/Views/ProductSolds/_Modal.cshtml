@@ -33,7 +33,7 @@
                         </div>
                         <div class="form-group">
                             <label for="productDateSold">Date Sold</label>
-                            <input data-bind="date:dateSold,dateFormat: 'YYYY-MM-DD', value: dateSold, valueUpdate: 'afterkeydown'" id="productDateSold" type="text" class="form-control" placeholder="DD/MM/YYYY">
+                            <input data-bind="value: dateSold, valueUpdate: 'afterkeydown'" id="productDateSold" type="text" class="form-control" placeholder="YYYY-MM-DD">
                         </div>
                     </form>
                 </div>
@@ -64,7 +64,7 @@
                         </div>
                         <div class="form-group">
                             <label for="editProductSoldProductList">Product Name</label>
-                            <select data-bind="optons: $parent.productList,optionsText:'name',optionsValue:'id',value:productId, valueUpdate: 'afterkeydown'" id="editProductSoldProductList" class="form-control"></select>
+                            <select data-bind="options: $parent.productList,optionsText:'name',optionsValue:'id',value:productId, valueUpdate: 'afterkeydown'" id="editProductSoldProductList" class="form-control"></select>
                         </div>
                         <div class="form-group">
                             <label for="editProductSoldStoreList">Store Name</label>

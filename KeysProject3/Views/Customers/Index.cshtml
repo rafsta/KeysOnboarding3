@@ -10,6 +10,7 @@
 <table class="table table-light table-hover" id="CustomersTable" data-bind="CustomerModel">
     <thead>
         <tr>
+            <th style="display: none">Id</th>
             <th>Customer Name</th>
             <th>Address</th>
             <th>Action(Edit)</th>
@@ -50,7 +51,7 @@
                 registerExtenders: true, //Use custom validation rules in extended observables
                 insertMessages: true, //Show validation messages under the binding object
                 messageTemplate: null
-            });
+            }, true);
 
             //Model
             function Customer(data) {
@@ -108,20 +109,20 @@
                     CustomerModel.chosenCustomer(customer);
                 },
                 deleteCustomer: function () {
-                        var id = ko.toJS(CustomerModel.chosenCustomer()).id;
-                        $.ajax({
-                            url: "/api/customers/" + id,
-                            cache: false,
-                            type: "DELETE",
-                            contentType: 'application/json; charset=utf-8',
-                            success: function () {
-                                location.reload(true);
-                            },
-                            error: function (xhr) {
-                                alert(xhr.responseText);
-                            }
-                        });
-                    },
+                    var id = ko.toJS(CustomerModel.chosenCustomer()).id;
+                    $.ajax({
+                        url: '/api/customers/' + id,
+                        cache: false,
+                        type: 'DELETE',
+                        contentType: 'application/json; charset=utf-8',
+                        success: function () {
+                            location.reload(true);
+                        },
+                        error: function (xhr) {
+                            alert(xhr.responseText);
+                        }
+                    });
+                },
 
                 //Update Customer
                 updateBtn: function (customer) {
