@@ -135,7 +135,7 @@
                 deleteProductSold: function () {
                     var id = ko.toJS(ProductSoldModel.chosenProductSold()).id;
                     $.ajax({
-                        url: 'api/productsolds/' + id,
+                        url: '/api/productsolds/' + id,
                         cache: false,
                         type: 'DELETE',
                         contentType: 'application/json; charset=utf-8',

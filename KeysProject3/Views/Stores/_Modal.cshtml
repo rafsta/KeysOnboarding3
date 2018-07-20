@@ -74,20 +74,12 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body" data-bind="with: chosenStore">
+                <div class="modal-body" data-bind="with:chosenStore">
                     Do you want to delete this Store?
-                    <ul>
-                        <li>
-                            <strong>Name: <span data-bind="text:$data.name"></span></strong>
-                        </li>
-                        <li>
-                            <strong>Address: <span data-bind="text:$data.address"></span></strong>
-                        </li>
-                    </ul>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-success" data-dismiss="modal">No</button>
-                    <button data-bind="click: deleteStore" type="button" class="btn btn-danger" id="deleteStoreSubmit">Yes</button>
+                    <button data-bind="click:deleteStore" type="button" class="btn btn-danger" id="deleteStoreSubmit">Yes</button>
                 </div>
             </div>
         </div>

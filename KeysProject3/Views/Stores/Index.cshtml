@@ -8,7 +8,7 @@
 @Scripts.Render("~/bundles/Library")
 @Html.Partial("_Modal")
 
-<table class="table table-light table-hover" id="storestable">
+<table data-bind="StoreModel" class="table table-light table-hover" id="storestable">
     <thead>
         <tr>
             <th style="display: none">Id</th>
@@ -106,7 +106,7 @@
                 deleteBtn: function (store) {
                     StoreModel.chosenStore(store);
                 },
-                deleteStore: function (store) {
+                deleteStore: function () {
                     var id = ko.toJS(StoreModel.chosenStore()).id;
                     $.ajax({
                         url: '/api/stores/' + id,
