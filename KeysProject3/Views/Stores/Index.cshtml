@@ -8,7 +8,7 @@
 @Scripts.Render("~/bundles/Library")
 @Html.Partial("_Modal")
 
-<table class="table table-light table-hover" id="storestable">
+<table data-bind="StoreModel" class="table table-light table-hover" id="storestable">
     <thead>
         <tr>
             <th style="display: none">Id</th>
@@ -38,7 +38,7 @@
 </table>
 
 @section scripts
-    {
+{
     <script>
         //Load table data
         $(function () {
@@ -106,12 +106,12 @@
                 deleteBtn: function (store) {
                     StoreModel.chosenStore(store);
                 },
-                deleteStore: function (store) {
+                deleteStore: function () {
                     var id = ko.toJS(StoreModel.chosenStore()).id;
                     $.ajax({
-                        url: '/api/stores/' + id,
+                        url: "/api/stores/" + id,
                         cache: false,
-                        type: 'DELETE',
+                        type: "DELETE",
                         contentType: 'application/json; charset=utf-8',
                         success: function () {
                             location.reload(true);
@@ -128,21 +128,21 @@
                     StoreModel.name.rules.remove(function (x) { return x.rule === "required" });
                     StoreModel.address.rules.remove(function (x) { return x.rule === "required" });
                 },
-                    changeStore: function () {
-                        if (StoreModel.errors().length === 0) {//No validation conflicts before sending data
-                    var updatedStore = ko.toJS(StoreModel.chosenStore);
-                    $.ajax({
-                        url: '/api/stores/' + updatedStore.id,
-                        cache: false,
-                        type: 'PUT',
-                        contentType: 'application/json; charset=utf-8',
-                        data: ko.toJSON(updatedStore),
-                        processData: true,
-                        success: function () {
-                            location.reload(true);
-                        },
-                        error: function (xhr) {
-                            alert(xhr.responseText);
+                changeStore: function () {
+                    if (StoreModel.errors().length === 0) {//No validation conflicts before sending data
+                        var updatedStore = ko.toJS(StoreModel.chosenStore);
+                        $.ajax({
+                            url: '/api/stores/' + updatedStore.id,
+                            cache: false,
+                            type: 'PUT',
+                            contentType: 'application/json; charset=utf-8',
+                            data: ko.toJSON(updatedStore),
+                            processData: true,
+                            success: function () {
+                                location.reload(true);
+                            },
+                            error: function (xhr) {
+                                alert(xhr.responseText);
                             }
                         });
                     } else {
