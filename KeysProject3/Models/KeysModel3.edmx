@@ -4,46 +4,142 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="MVC3Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityType Name="Customers">
+    <Schema Namespace="MVC3Model.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2012" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="MVC3ModelStoreContainer">
+    <EntitySet Name="Customers" EntityType="MVC3Model.Store.Customers" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Products" EntityType="MVC3Model.Store.Products" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="ProductSolds" EntityType="MVC3Model.Store.ProductSolds" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Stores" EntityType="MVC3Model.Store.Stores" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="FK_CustomerProductSold" Association="MVC3Model.Store.FK_CustomerProductSold">
+      <End Role="Customers" EntitySet="Customers" />
+      <End Role="ProductSolds" EntitySet="ProductSolds" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductProductSold" Association="MVC3Model.Store.FK_ProductProductSold">
+      <End Role="Products" EntitySet="Products" />
+      <End Role="ProductSolds" EntitySet="ProductSolds" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StoreProductSold" Association="MVC3Model.Store.FK_StoreProductSold">
+      <End Role="Stores" EntitySet="Stores" />
+      <End Role="ProductSolds" EntitySet="ProductSolds" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Customers">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Address" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Products">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Price" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ProductSolds">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CustomerId" Type="int" Nullable="false" />
+    <Property Name="ProductId" Type="int" Nullable="false" />
+    <Property Name="StoreId" Type="int" Nullable="false" />
+    <Property Name="DateSold" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Stores">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Address" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_CustomerProductSold">
+    <End Role="Customers" Type="MVC3Model.Store.Customers" Multiplicity="1" />
+    <End Role="ProductSolds" Type="MVC3Model.Store.ProductSolds" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customers">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ProductSolds">
+        <PropertyRef Name="CustomerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProductProductSold">
+    <End Role="Products" Type="MVC3Model.Store.Products" Multiplicity="1" />
+    <End Role="ProductSolds" Type="MVC3Model.Store.ProductSolds" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Products">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ProductSolds">
+        <PropertyRef Name="ProductId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StoreProductSold">
+    <End Role="Stores" Type="MVC3Model.Store.Stores" Multiplicity="1" />
+    <End Role="ProductSolds" Type="MVC3Model.Store.ProductSolds" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Stores">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ProductSolds">
+        <PropertyRef Name="StoreId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MVC3Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Customer">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="Address" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="ProductSolds" Relationship="Self.FK_CustomerProductSold" FromRole="Customers" ToRole="ProductSolds" />
         </EntityType>
-        <EntityType Name="Products">
+        <EntityType Name="Product">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="Price" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Price" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="ProductSolds" Relationship="Self.FK_ProductProductSold" FromRole="Products" ToRole="ProductSolds" />
         </EntityType>
-        <EntityType Name="ProductSolds">
+        <EntityType Name="ProductSold">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="CustomerId" Type="int" Nullable="false" />
-          <Property Name="ProductId" Type="int" Nullable="false" />
-          <Property Name="StoreId" Type="int" Nullable="false" />
-          <Property Name="DateSold" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerId" Type="Int32" Nullable="false" />
+          <Property Name="ProductId" Type="Int32" Nullable="false" />
+          <Property Name="StoreId" Type="Int32" Nullable="false" />
+          <Property Name="DateSold" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Customer" Relationship="Self.FK_CustomerProductSold" FromRole="ProductSolds" ToRole="Customers" />
+          <NavigationProperty Name="Product" Relationship="Self.FK_ProductProductSold" FromRole="ProductSolds" ToRole="Products" />
+          <NavigationProperty Name="Store" Relationship="Self.FK_StoreProductSold" FromRole="ProductSolds" ToRole="Stores" />
         </EntityType>
-        <EntityType Name="Stores">
+        <EntityType Name="Store">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="Address" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="ProductSolds" Relationship="Self.FK_StoreProductSold" FromRole="Stores" ToRole="ProductSolds" />
         </EntityType>
         <Association Name="FK_CustomerProductSold">
-          <End Role="Customers" Type="Self.Customers" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="ProductSolds" Type="Self.ProductSolds" Multiplicity="*" />
+          <End Role="Customers" Type="Self.Customer" Multiplicity="1" />
+          <End Role="ProductSolds" Type="Self.ProductSold" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Customers">
               <PropertyRef Name="Id" />
@@ -54,10 +150,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_ProductProductSold">
-          <End Role="Products" Type="Self.Products" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="ProductSolds" Type="Self.ProductSolds" Multiplicity="*" />
+          <End Role="Products" Type="Self.Product" Multiplicity="1" />
+          <End Role="ProductSolds" Type="Self.ProductSold" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Products">
               <PropertyRef Name="Id" />
@@ -68,10 +162,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_StoreProductSold">
-          <End Role="Stores" Type="Self.Stores" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="ProductSolds" Type="Self.ProductSolds" Multiplicity="*" />
+          <End Role="Stores" Type="Self.Store" Multiplicity="1" />
+          <End Role="ProductSolds" Type="Self.ProductSold" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Stores">
               <PropertyRef Name="Id" />
@@ -81,11 +173,11 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="MVC3ModelStoreContainer">
-          <EntitySet Name="Customers" EntityType="Self.Customers" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="ProductSolds" EntityType="Self.ProductSolds" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Stores" EntityType="Self.Stores" Schema="dbo" store:Type="Tables" />
+        <EntityContainer Name="MVC3Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Customers" EntityType="Self.Customer" />
+          <EntitySet Name="Products" EntityType="Self.Product" />
+          <EntitySet Name="ProductSolds" EntityType="Self.ProductSold" />
+          <EntitySet Name="Stores" EntityType="Self.Store" />
           <AssociationSet Name="FK_CustomerProductSold" Association="Self.FK_CustomerProductSold">
             <End Role="Customers" EntitySet="Customers" />
             <End Role="ProductSolds" EntitySet="ProductSolds" />
@@ -99,155 +191,51 @@
             <End Role="ProductSolds" EntitySet="ProductSolds" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
-    <!-- CSDL content -->
-    <edmx:ConceptualModels>
-      <Schema Namespace="MVC3Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityContainer Name="MVC3Entities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Customers" EntityType="MVC3Model.Customer" />
-          <EntitySet Name="Products" EntityType="MVC3Model.Product" />
-          <EntitySet Name="ProductSolds" EntityType="MVC3Model.ProductSold" />
-          <EntitySet Name="Stores" EntityType="MVC3Model.Store" />
-          <AssociationSet Name="FK_CustomerProductSold" Association="MVC3Model.FK_CustomerProductSold">
-            <End Role="Customer" EntitySet="Customers" />
-            <End Role="ProductSold" EntitySet="ProductSolds" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductProductSold" Association="MVC3Model.FK_ProductProductSold">
-            <End Role="Product" EntitySet="Products" />
-            <End Role="ProductSold" EntitySet="ProductSolds" />
-          </AssociationSet>
-          <AssociationSet Name="FK_StoreProductSold" Association="MVC3Model.FK_StoreProductSold">
-            <End Role="Store" EntitySet="Stores" />
-            <End Role="ProductSold" EntitySet="ProductSolds" />
-          </AssociationSet>
-        </EntityContainer>
-        <EntityType Name="Customer">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Address" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="ProductSolds" Relationship="MVC3Model.FK_CustomerProductSold" FromRole="Customer" ToRole="ProductSold" />
-        </EntityType>
-        <EntityType Name="Product">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Price" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="ProductSolds" Relationship="MVC3Model.FK_ProductProductSold" FromRole="Product" ToRole="ProductSold" />
-        </EntityType>
-        <EntityType Name="ProductSold">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CustomerId" Type="Int32" Nullable="false" />
-          <Property Name="ProductId" Type="Int32" Nullable="false" />
-          <Property Name="StoreId" Type="Int32" Nullable="false" />
-          <Property Name="DateSold" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Customer" Relationship="MVC3Model.FK_CustomerProductSold" FromRole="ProductSold" ToRole="Customer" />
-          <NavigationProperty Name="Product" Relationship="MVC3Model.FK_ProductProductSold" FromRole="ProductSold" ToRole="Product" />
-          <NavigationProperty Name="Store" Relationship="MVC3Model.FK_StoreProductSold" FromRole="ProductSold" ToRole="Store" />
-        </EntityType>
-        <EntityType Name="Store">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Address" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="ProductSolds" Relationship="MVC3Model.FK_StoreProductSold" FromRole="Store" ToRole="ProductSold" />
-        </EntityType>
-        <Association Name="FK_CustomerProductSold">
-          <End Type="MVC3Model.Customer" Role="Customer" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="MVC3Model.ProductSold" Role="ProductSold" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Customer">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ProductSold">
-              <PropertyRef Name="CustomerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProductProductSold">
-          <End Type="MVC3Model.Product" Role="Product" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="MVC3Model.ProductSold" Role="ProductSold" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Product">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ProductSold">
-              <PropertyRef Name="ProductId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_StoreProductSold">
-          <End Type="MVC3Model.Store" Role="Store" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="MVC3Model.ProductSold" Role="ProductSold" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Store">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ProductSold">
-              <PropertyRef Name="StoreId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        </Schema>
+      </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
     <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
   <EntityContainerMapping StorageEntityContainer="MVC3ModelStoreContainer" CdmEntityContainer="MVC3Entities">
-          <EntitySetMapping Name="Customers">
-            <EntityTypeMapping TypeName="MVC3Model.Customer">
-              <MappingFragment StoreEntitySet="Customers">
-                <ScalarProperty Name="Address" ColumnName="Address" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Products">
-            <EntityTypeMapping TypeName="MVC3Model.Product">
-              <MappingFragment StoreEntitySet="Products">
-                <ScalarProperty Name="Price" ColumnName="Price" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ProductSolds">
-            <EntityTypeMapping TypeName="MVC3Model.ProductSold">
-              <MappingFragment StoreEntitySet="ProductSolds">
-                <ScalarProperty Name="DateSold" ColumnName="DateSold" />
-                <ScalarProperty Name="StoreId" ColumnName="StoreId" />
-                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
-                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Stores">
-            <EntityTypeMapping TypeName="MVC3Model.Store">
-              <MappingFragment StoreEntitySet="Stores">
-                <ScalarProperty Name="Address" ColumnName="Address" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-        </EntityContainerMapping>
+    <EntitySetMapping Name="Customers">
+      <EntityTypeMapping TypeName="IsTypeOf(MVC3Model.Customer)">
+        <MappingFragment StoreEntitySet="Customers">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Address" ColumnName="Address" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Products">
+      <EntityTypeMapping TypeName="IsTypeOf(MVC3Model.Product)">
+        <MappingFragment StoreEntitySet="Products">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Price" ColumnName="Price" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ProductSolds">
+      <EntityTypeMapping TypeName="IsTypeOf(MVC3Model.ProductSold)">
+        <MappingFragment StoreEntitySet="ProductSolds">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+          <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+          <ScalarProperty Name="StoreId" ColumnName="StoreId" />
+          <ScalarProperty Name="DateSold" ColumnName="DateSold" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Stores">
+      <EntityTypeMapping TypeName="IsTypeOf(MVC3Model.Store)">
+        <MappingFragment StoreEntitySet="Stores">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Address" ColumnName="Address" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
 </Mapping></edmx:Mappings>
   </edmx:Runtime>
   <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->

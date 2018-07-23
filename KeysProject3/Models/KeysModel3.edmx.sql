@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 07/20/2018 14:10:05
+-- Date Created: 07/20/2018 11:38:34
 -- Generated from EDMX file: C:\Users\princ\source\repos\KeysProject3\KeysProject3\Models\KeysModel3.edmx
 -- --------------------------------------------------
 
@@ -17,15 +17,6 @@ GO
 -- Dropping existing FOREIGN KEY constraints
 -- --------------------------------------------------
 
-IF OBJECT_ID(N'[dbo].[FK_CustomerProductSold]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[ProductSolds] DROP CONSTRAINT [FK_CustomerProductSold];
-GO
-IF OBJECT_ID(N'[dbo].[FK_ProductProductSold]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[ProductSolds] DROP CONSTRAINT [FK_ProductProductSold];
-GO
-IF OBJECT_ID(N'[dbo].[FK_StoreProductSold]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[ProductSolds] DROP CONSTRAINT [FK_StoreProductSold];
-GO
 
 -- --------------------------------------------------
 -- Dropping existing tables
@@ -36,9 +27,6 @@ IF OBJECT_ID(N'[dbo].[Customers]', 'U') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[Products]', 'U') IS NOT NULL
     DROP TABLE [dbo].[Products];
-GO
-IF OBJECT_ID(N'[dbo].[ProductSolds]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[ProductSolds];
 GO
 IF OBJECT_ID(N'[dbo].[Stores]', 'U') IS NOT NULL
     DROP TABLE [dbo].[Stores];
@@ -120,7 +108,7 @@ ADD CONSTRAINT [FK_CustomerProductSold]
     FOREIGN KEY ([CustomerId])
     REFERENCES [dbo].[Customers]
         ([Id])
-    ON DELETE CASCADE ON UPDATE NO ACTION;
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
 GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_CustomerProductSold'
@@ -135,7 +123,7 @@ ADD CONSTRAINT [FK_ProductProductSold]
     FOREIGN KEY ([ProductId])
     REFERENCES [dbo].[Products]
         ([Id])
-    ON DELETE CASCADE ON UPDATE NO ACTION;
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
 GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_ProductProductSold'
@@ -150,7 +138,7 @@ ADD CONSTRAINT [FK_StoreProductSold]
     FOREIGN KEY ([StoreId])
     REFERENCES [dbo].[Stores]
         ([Id])
-    ON DELETE CASCADE ON UPDATE NO ACTION;
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
 GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_StoreProductSold'
